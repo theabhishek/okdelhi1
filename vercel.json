@@ -2,12 +2,25 @@
     "builds": [{
         "src": "redditClone/wsgi.py",
         "use": "@vercel/python",
-        "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
+        "config": { 
+            "maxLambdaSize": "15mb", 
+            "runtime": "python3.12",
+            "installCommand": "pip install --no-cache-dir -r requirements.txt",
+            "buildCommand": "python manage.py collectstatic --noinput"
+        }
     }],
     "routes": [
+        {
+            "src": "/static/(.*)",
+            "dest": "/static/$1"
+        },
         {
             "src": "/(.*)",
             "dest": "redditClone/wsgi.py"
         }
-    ]
+    ],
+    "env": {
+        "PYTHONPATH": "/vercel/path0",
+        "PG_CONFIG": "/usr/bin/pg_config"
+    }
 }
