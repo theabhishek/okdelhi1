@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-100">
+            <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+                <h2 class="text-xl font-semibold text-gray-800 mb-0">Create New Notification</h2>
+            </div>
+            <div class="p-6 md:p-8">
+                <form method="post" enctype="multipart/form-data" class="space-y-6">
+                    {% csrf_token %}
+
+                    <div>
+                        <label for="id_title" class="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                        <input type="text" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-150 ease-in-out" id="id_title" name="title" required>
+                        {# Add field errors if rendering via Django form #}
+                        {# {% if form.title.errors %}<p class="text-red-600 text-xs mt-1">{{ form.title.errors|striptags }}</p>{% endif %} #}
+                    </div>
+
+                    <div>
+                        <label for="id_content" class="block text-sm font-medium text-gray-700 mb-1">Content</label>
+                        <textarea class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-150 ease-in-out" id="id_content" name="content" rows="5" required></textarea>
+                        {# {% if form.content.errors %}<p class="text-red-600 text-xs mt-1">{{ form.content.errors|striptags }}</p>{% endif %} #}
+                    </div>
+
+                    <div>
+                        <label for="id_priority" class="block text-sm font-medium text-gray-700 mb-1">Priority</label>
+                        <select class="block w-full pl-3 pr-10 py-2 border border-gray-300 rounded-md shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-150 ease-in-out appearance-none" id="id_priority" name="priority">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option> {# Example: Default selected #}
+                            <option value="high">High</option>
+                        </select>
+                        {# {% if form.priority.errors %}<p class="text-red-600 text-xs mt-1">{{ form.priority.errors|striptags }}</p>{% endif %} #}
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
+                            <label for="id_start_date" class="block text-sm font-medium text-gray-700 mb-1">Start Date <span class="text-gray-500 font-normal">(Optional)</span></label>
+                            <input type="date" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-150 ease-in-out" id="id_start_date" name="start_date">
+                             {# {% if form.start_date.errors %}<p class="text-red-600 text-xs mt-1">{{ form.start_date.errors|striptags }}</p>{% endif %} #}
+                       </div>
+
+                        <div>
+                            <label for="id_end_date" class="block text-sm font-medium text-gray-700 mb-1">End Date <span class="text-gray-500 font-normal">(Optional)</span></label>
+                            <input type="date" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-150 ease-in-out" id="id_end_date" name="end_date">
+                             {# {% if form.end_date.errors %}<p class="text-red-600 text-xs mt-1">{{ form.end_date.errors|striptags }}</p>{% endif %} #}
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="id_image" class="block text-sm font-medium text-gray-700 mb-1">Image <span class="text-gray-500 font-normal">(Optional)</span></label>
+                        <input type="file" class="block w-full text-sm text-gray-500 border border-gray-300 rounded-md shadow-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
+                                file:mr-4 file:py-2 file:px-4
+                                file:rounded-l-md file:border-0
+                                file:text-sm file:font-semibold
+                                file:bg-indigo-50 file:text-indigo-700
+                                hover:file:bg-indigo-100 transition duration-150 ease-in-out" id="id_image" name="image" accept="image/*">
+                        {# {% if form.image.errors %}<p class="text-red-600 text-xs mt-1">{{ form.image.errors|striptags }}</p>{% endif %} #}
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row sm:justify-end sm:gap-3 pt-4 border-t border-gray-200 mt-8">
+                        <a href="{% url 'notifications:notification_list' %}" class="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out order-2 sm:order-1">
+                            Cancel
+                        </a>
+                         <button type="submit" class="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out order-1 sm:order-2">
+                            Create Notification
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

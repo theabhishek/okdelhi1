@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}Coliving Spaces{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-8">Coliving Spaces</h1>
+    
+    <!-- Filters -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+        <form method="get" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Property Type Filter -->
+            <div>
+                <label for="property_type" class="block text-sm font-medium text-gray-700 mb-1">Property Type</label>
+                <select name="property_type" id="property_type" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <option value="">All Types</option>
+                    {% for value, label in property_types %}
+                        <option value="{{ value }}" {% if value == selected_property_type %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!-- Gender Preference Filter -->
+            <div>
+                <label for="gender_preference" class="block text-sm font-medium text-gray-700 mb-1">Gender Preference</label>
+                <select name="gender_preference" id="gender_preference" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <option value="">All Preferences</option>
+                    {% for value, label in gender_preferences %}
+                        <option value="{{ value }}" {% if value == selected_gender_preference %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!-- City Filter -->
+            <div>
+                <label for="city" class="block text-sm font-medium text-gray-700 mb-1">City</label>
+                <select name="city" id="city" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <option value="">All Cities</option>
+                    {% for city in cities %}
+                        <option value="{{ city }}" {% if city == selected_city %}selected{% endif %}>
+                            {{ city }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!-- Submit Button -->
+            <div class="md:col-span-3 flex justify-end">
+                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors">
+                    Apply Filters
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Coliving Spaces Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for space in coliving_spaces %}
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <!-- Image Placeholder -->
+                <div class="h-48 bg-gray-200 flex items-center justify-center">
+                    <span class="text-gray-500">No image available</span>
+                </div>
+                
+                <!-- Content -->
+                <div class="p-6">
+                    <h2 class="text-xl font-semibold mb-2">
+                        <a href="{% url 'coliving:listing_detail' listing_id=space.id %}" class="hover:text-blue-500">
+                            {{ space.title }}
+                        </a>
+                    </h2>
+                    
+                    <!-- Property Type and Gender Preference -->
+                    <div class="flex space-x-2 mb-2">
+                        <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
+                            {{ space.get_property_type_display }}
+                        </span>
+                        <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">
+                            {{ space.get_gender_preference_display }}
+                        </span>
+                    </div>
+                    
+                    <!-- Price -->
+                    <div class="text-lg font-bold text-gray-800 mb-2">
+                        ₹{{ space.price_per_month }}/month
+                    </div>
+                    
+                    <!-- Location -->
+                    <div class="text-gray-600 mb-4">
+                        {{ space.locality }}, {{ space.city }}
+                    </div>
+                    
+                    <!-- View Details Button -->
+                    <a href="{% url 'coliving:listing_detail' listing_id=space.id %}" 
+                       class="block w-full text-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors">
+                        View Details
+                    </a>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-span-full text-center py-8">
+                <p class="text-gray-500">No coliving spaces found matching your criteria.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 

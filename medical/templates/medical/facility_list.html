@@ -1,0 +1,102 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Medical Facilities{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">Medical Facilities</h1>
+        {% if user.is_authenticated %}
+        <a href="{% url 'medical:facility_create' %}" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+            Add New Facility
+        </a>
+        {% endif %}
+    </div>
+
+    <!-- Search Form -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+        <form method="get" class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label for="q" class="block text-sm font-medium text-gray-700">Search</label>
+                    <input type="text" name="q" id="q" value="{{ query }}" 
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                           placeholder="Search by name, description, or services...">
+                </div>
+                <div>
+                    <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
+                    <input type="text" name="location" id="location" value="{{ location }}"
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                           placeholder="Search by area or city...">
+                </div>
+                <div>
+                    <label for="type" class="block text-sm font-medium text-gray-700">Facility Type</label>
+                    <select name="type" id="type" 
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <option value="">All Types</option>
+                        <option value="hospital" {% if facility_type == 'hospital' %}selected{% endif %}>Hospital</option>
+                        <option value="clinic" {% if facility_type == 'clinic' %}selected{% endif %}>Clinic</option>
+                        <option value="pharmacy" {% if facility_type == 'pharmacy' %}selected{% endif %}>Pharmacy</option>
+                        <option value="diagnostic" {% if facility_type == 'diagnostic' %}selected{% endif %}>Diagnostic Center</option>
+                        <option value="other" {% if facility_type == 'other' %}selected{% endif %}>Other</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex justify-end">
+                <button type="submit" 
+                        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                    Search
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Results Count -->
+    {% if query or location or facility_type %}
+    <div class="mb-4">
+        <p class="text-gray-600">
+            Found {{ facilities.count }} result{% if facilities.count != 1 %}s{% endif %}
+            {% if query %} for "{{ query }}"{% endif %}
+            {% if location %} in "{{ location }}"{% endif %}
+            {% if facility_type %} of type "{{ facility_type }}"{% endif %}
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Facilities Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for facility in facilities %}
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="p-6">
+                <div class="flex justify-between items-start">
+                    <h2 class="text-xl font-semibold text-gray-800">{{ facility.name }}</h2>
+                    <span class="px-2 py-1 text-sm rounded-full 
+                        {% if facility.facility_type == 'hospital' %}bg-blue-100 text-blue-800
+                        {% elif facility.facility_type == 'clinic' %}bg-green-100 text-green-800
+                        {% elif facility.facility_type == 'pharmacy' %}bg-purple-100 text-purple-800
+                        {% elif facility.facility_type == 'diagnostic' %}bg-yellow-100 text-yellow-800
+                        {% else %}bg-gray-100 text-gray-800{% endif %}">
+                        {{ facility.get_facility_type_display }}
+                    </span>
+                </div>
+                <p class="text-gray-600 mt-2">{{ facility.location }}, {{ facility.city }}</p>
+                <p class="text-gray-600 mt-2">{{ facility.contact_number }}</p>
+                {% if facility.email %}
+                <p class="text-gray-600 mt-2">{{ facility.email }}</p>
+                {% endif %}
+                <div class="mt-4">
+                    <a href="{% url 'medical:facility_detail' facility.pk %}" 
+                       class="text-blue-600 hover:text-blue-800 font-medium">
+                        View Details
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-full text-center py-8">
+            <p class="text-gray-600">No medical facilities found matching your search criteria.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 

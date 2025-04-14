@@ -1,0 +1,46 @@
+{% extends 'notifications/base_notifications.html' %}
+
+{% block notification_content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="mb-0">Pending Notifications</h2>
+    </div>
+    <div class="card-body">
+        {% if notifications %}
+            {% for notification in notifications %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">{{ notification.title }}</h5>
+                            <span class="badge {% if notification.priority == 'high' %}bg-danger{% elif notification.priority == 'medium' %}bg-warning{% else %}bg-info{% endif %}">
+                                {{ notification.get_priority_display }}
+                            </span>
+                        </div>
+                        <p class="card-text text-muted small mt-2">
+                            Submitted by {{ notification.author.username }} on {{ notification.created_at|date:"F j, Y" }}
+                        </p>
+                        <p class="card-text">{{ notification.content }}</p>
+                        {% if notification.start_date or notification.end_date %}
+                            <p class="card-text small">
+                                {% if notification.start_date %}
+                                    <span class="text-muted">Starts: {{ notification.start_date|date:"F j, Y" }}</span>
+                                {% endif %}
+                                {% if notification.end_date %}
+                                    <span class="text-muted ms-3">Ends: {{ notification.end_date|date:"F j, Y" }}</span>
+                                {% endif %}
+                            </p>
+                        {% endif %}
+                        <div class="mt-3">
+                            <a href="{% url 'notifications:approve_notification' slug=notification.slug %}" class="btn btn-primary">Review</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info">
+                No notifications pending approval.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

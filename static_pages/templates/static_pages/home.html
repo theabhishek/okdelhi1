@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <!-- Hero Section -->
+    <div class="container mx-auto px-4 py-16">
+        <div class="max-w-4xl mx-auto text-center">
+            <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+                Welcome to Delhi Community Hub
+            </h1>
+            <p class="text-xl text-gray-600 mb-8">
+                Your one-stop destination for coliving, transportation, and local deals in Delhi
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="{% url 'pg_rental:listings' %}" 
+                   class="px-8 py-4 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition">
+                    Find Coliving & PG
+                </a>
+                <a href="{% url 'metro:metro_route_finder' %}" 
+                   class="px-8 py-4 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition">
+                    Metro Routes
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="container mx-auto px-4 py-16">
+        <h2 class="text-3xl font-bold text-center mb-12">Why Choose Us?</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Feature 1 -->
+            <div class="bg-white p-8 rounded-xl shadow-lg">
+                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6">
+                    <i class="fas fa-home text-2xl text-blue-600"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-4">Find Your Perfect Home</h3>
+                <p class="text-gray-600">Discover comfortable and affordable coliving spaces and PGs across Delhi.</p>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="bg-white p-8 rounded-xl shadow-lg">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6">
+                    <i class="fas fa-train text-2xl text-green-600"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-4">Easy Transportation</h3>
+                <p class="text-gray-600">Navigate Delhi with our comprehensive metro and bus route guides.</p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="bg-white p-8 rounded-xl shadow-lg">
+                <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-6">
+                    <i class="fas fa-tags text-2xl text-purple-600"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-4">Exclusive Deals</h3>
+                <p class="text-gray-600">Save money with our curated collection of coupons and offers.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="bg-blue-600 py-16">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold text-white mb-6">Ready to Get Started?</h2>
+            <p class="text-xl text-blue-100 mb-8">Join our community and make the most of your time in Delhi.</p>
+            <a href="{% url 'users:signup' %}" 
+               class="px-8 py-4 bg-white text-blue-600 rounded-lg font-semibold hover:bg-blue-50 transition">
+                Sign Up Now
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %} 

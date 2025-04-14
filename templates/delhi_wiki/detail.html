@@ -1,0 +1,163 @@
+{% extends 'delhi_wiki/base.html' %}
+
+{% block wiki_content %}
+<div class="bg-white rounded-lg shadow-md p-6">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row gap-6 mb-8">
+        <!-- Image -->
+        <div class="w-full md:w-1/3">
+            {% if item.image %}
+            <img src="{{ item.image.url }}" alt="{{ item.name }}" class="w-full h-64 object-cover rounded-lg">
+            {% else %}
+            <div class="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
+                <span class="text-gray-400">No image</span>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Info -->
+        <div class="w-full md:w-2/3">
+            <div class="flex justify-between items-start mb-4">
+                <h1 class="text-3xl font-bold">{{ item.name }}</h1>
+                {% if not item.is_verified %}
+                <span class="px-3 py-1 text-sm bg-yellow-100 text-yellow-800 rounded-full">
+                    Pending verification
+                </span>
+                {% endif %}
+            </div>
+
+            {% if item.area %}
+            <p class="text-gray-600 mb-4">
+                <a href="{% url 'delhi_wiki:area_detail' item.area.slug %}" class="hover:text-indigo-600">
+                    {{ item.area.name }}
+                </a>
+            </p>
+            {% endif %}
+
+            {% if item.rating %}
+            <div class="flex items-center text-yellow-400 mb-4">
+                {% for i in "12345"|make_list %}
+                    {% if forloop.counter <= item.rating %}
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                    {% else %}
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 20 20">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                        </svg>
+                    {% endif %}
+                {% endfor %}
+                <span class="text-gray-600 ml-2">{{ item.rating|floatformat:1 }}</span>
+            </div>
+            {% endif %}
+
+            {% if item.address %}
+            <div class="mb-4">
+                <h3 class="text-sm font-semibold text-gray-500">Address</h3>
+                <p class="text-gray-700">{{ item.address }}</p>
+            </div>
+            {% endif %}
+
+            {% if item.timings %}
+            <div class="mb-4">
+                <h3 class="text-sm font-semibold text-gray-500">Timings</h3>
+                <p class="text-gray-700">{{ item.timings }}</p>
+            </div>
+            {% endif %}
+
+            {% if item.entry_fee %}
+            <div class="mb-4">
+                <h3 class="text-sm font-semibold text-gray-500">Entry Fee</h3>
+                <p class="text-gray-700">{{ item.entry_fee }}</p>
+            </div>
+            {% endif %}
+
+            {% if item.price_range %}
+            <div class="mb-4">
+                <h3 class="text-sm font-semibold text-gray-500">Price Range</h3>
+                <p class="text-gray-700">{{ item.price_range }}</p>
+            </div>
+            {% endif %}
+
+            {% if item.specialties %}
+            <div class="mb-4">
+                <h3 class="text-sm font-semibold text-gray-500">Specialties</h3>
+                <p class="text-gray-700">{{ item.specialties }}</p>
+            </div>
+            {% endif %}
+
+            {% if item.start_date and item.end_date %}
+            <div class="mb-4">
+                <h3 class="text-sm font-semibold text-gray-500">Event Dates</h3>
+                <p class="text-gray-700">
+                    {{ item.start_date|date:"F j, Y" }} - {{ item.end_date|date:"F j, Y" }}
+                </p>
+            </div>
+            {% endif %}
+
+            {% if item.ticket_price %}
+            <div class="mb-4">
+                <h3 class="text-sm font-semibold text-gray-500">Ticket Price</h3>
+                <p class="text-gray-700">{{ item.ticket_price }}</p>
+            </div>
+            {% endif %}
+
+            {% if item.ticket_link %}
+            <div class="mb-4">
+                <h3 class="text-sm font-semibold text-gray-500">Ticket Link</h3>
+                <a href="{{ item.ticket_link }}" target="_blank" class="text-indigo-600 hover:text-indigo-800">
+                    {{ item.ticket_link }}
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Description -->
+    <div class="mb-8">
+        <h2 class="text-xl font-semibold mb-4">Description</h2>
+        <div class="prose max-w-none">
+            {{ item.description|linebreaks }}
+        </div>
+    </div>
+
+    <!-- Reviews -->
+    {% if reviews %}
+    <div class="mb-8">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-semibold">Reviews</h2>
+            {% if user.is_authenticated %}
+            <a href="{% url review_create_url item.slug %}" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">
+                Add Review
+            </a>
+            {% endif %}
+        </div>
+
+        <div class="space-y-6">
+            {% for review in reviews %}
+            <div class="bg-gray-50 rounded-lg p-4">
+                <div class="flex justify-between items-start mb-2">
+                    <div class="flex items-center">
+                        <span class="font-semibold">{{ review.author.username }}</span>
+                        <span class="text-gray-500 text-sm ml-2">
+                            {{ review.created_at|date:"F j, Y" }}
+                        </span>
+                    </div>
+                    <div class="flex text-yellow-400">
+                        {% for i in "12345"|make_list %}
+                            {% if forloop.counter <= review.rating %}
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                </svg>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                <p class="text-gray-700">{{ review.content|linebreaks }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %} 

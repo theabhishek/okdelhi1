@@ -1,0 +1,65 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Add Review - {{ coliving_space.title }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h1 class="text-2xl font-bold mb-6">Add Review for {{ coliving_space.title }}</h1>
+            
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                <!-- Rating -->
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Rating</label>
+                    <div class="flex space-x-2">
+                        {% for i in "12345"|make_list %}
+                            <label class="cursor-pointer">
+                                <input type="radio" name="rating" value="{{ i }}" class="hidden peer" required>
+                                <div class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 peer-checked:bg-yellow-400 peer-checked:text-white text-gray-600 hover:bg-yellow-200 transition-colors">
+                                    {{ i }}
+                                </div>
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Comment -->
+                <div>
+                    <label for="comment" class="block text-gray-700 text-sm font-bold mb-2">Your Review</label>
+                    <textarea id="comment" name="comment" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
+                </div>
+                
+                <!-- Submit Button -->
+                <div class="flex justify-end space-x-4">
+                    <a href="{% url 'coliving:listing_detail' listing_id=coliving_space.id %}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors">
+                        Cancel
+                    </a>
+                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors">
+                        Submit Review
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Add hover effect to rating stars
+    document.querySelectorAll('input[name="rating"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const stars = document.querySelectorAll('input[name="rating"]');
+            stars.forEach((star, index) => {
+                const label = star.nextElementSibling;
+                if (index < this.value) {
+                    label.classList.add('bg-yellow-400', 'text-white');
+                } else {
+                    label.classList.remove('bg-yellow-400', 'text-white');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %} 

@@ -1,0 +1,3 @@
+"""
+Django project package initialization.
+""" 

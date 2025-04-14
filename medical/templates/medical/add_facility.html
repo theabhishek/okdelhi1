@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Medical Facility{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-8">
+    <div class="bg-white rounded-lg shadow-lg p-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-6">Add Medical Facility</h1>
+        
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700">Facility Name</label>
+                    {{ form.name }}
+                    {% if form.name.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.name.errors }}</p>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    <label for="{{ form.facility_type.id_for_label }}" class="block text-sm font-medium text-gray-700">Facility Type</label>
+                    {{ form.facility_type }}
+                    {% if form.facility_type.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.facility_type.errors }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div>
+                <label for="{{ form.address.id_for_label }}" class="block text-sm font-medium text-gray-700">Address</label>
+                {{ form.address }}
+                {% if form.address.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.address.errors }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="{{ form.location.id_for_label }}" class="block text-sm font-medium text-gray-700">Location/Area</label>
+                    {{ form.location }}
+                    {% if form.location.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.location.errors }}</p>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    <label for="{{ form.city.id_for_label }}" class="block text-sm font-medium text-gray-700">City</label>
+                    {{ form.city }}
+                    {% if form.city.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.city.errors }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="{{ form.contact_number.id_for_label }}" class="block text-sm font-medium text-gray-700">Contact Number</label>
+                    {{ form.contact_number }}
+                    {% if form.contact_number.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.contact_number.errors }}</p>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700">Email (Optional)</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.email.errors }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div>
+                <label for="{{ form.website.id_for_label }}" class="block text-sm font-medium text-gray-700">Website (Optional)</label>
+                {{ form.website }}
+                {% if form.website.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.website.errors }}</p>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700">Description</label>
+                {{ form.description }}
+                {% if form.description.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.description.errors }}</p>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label for="{{ form.services.id_for_label }}" class="block text-sm font-medium text-gray-700">Services Provided</label>
+                {{ form.services }}
+                {% if form.services.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.services.errors }}</p>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label for="{{ form.opening_hours.id_for_label }}" class="block text-sm font-medium text-gray-700">Opening Hours</label>
+                {{ form.opening_hours }}
+                {% if form.opening_hours.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.opening_hours.errors }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="flex justify-end">
+                <button type="submit" 
+                        class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    Submit for Approval
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %} 

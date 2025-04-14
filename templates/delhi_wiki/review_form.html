@@ -1,0 +1,9 @@
+{% extends 'delhi_wiki/form.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block wiki_content %}
+{% with submit_text=submit_text|default:'Submit Review' cancel_url=cancel_url|default:'delhi_wiki:area_list' %}
+{{ block.super }}
+{% endwith %}
+{% endblock %} 

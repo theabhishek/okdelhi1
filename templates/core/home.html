@@ -1,0 +1,161 @@
+{% extends 'base/base.html' %}
+<style>
+
+
+</style>
+{% block title %}Home - Reddit Clone{% endblock %}
+{% block content %}
+
+<div class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-6 md:py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+            <!-- Main Content -->
+            <div class="lg:col-span-2 space-y-6">
+                <div class="carousel" data-flickity='{ "groupCells": true ,"autoPlay": true, "freeScroll": true, "contain": true, "prevNextButtons": false, "pageDots": false }'>
+                    <div class="carousel-cell">
+                      <a href="/delhi-wiki/areas/">
+                      <img class="h-24" src="https://iili.io/3cSWfGp.png" alt="">
+                      </a>                  
+                    </div>
+                    <div class="carousel-cell size-180">
+                      <a href="/metro/route-finder/">
+                      <img class="h-24" src="https://iili.io/3cS8Hfs.png" alt="">
+                  </a>              
+                    </div>
+                    <div class="carousel-cell size-large">
+                      <a href="/pg-rental/">
+                      <img class="h-24" src="https://iili.io/3cSbpyP.gif" alt="">
+                  </a>              
+                    </div>
+                    <div class="carousel-cell">
+                      <a href="/jobs/">
+                      <img class="h-24" src="https://iili.io/3cUJE4s.gif" alt="">
+                  </a>            
+                    </div>
+                    <div class="carousel-cell size-large">
+                      <a href="/lost-and-found/">
+                      <img class="h-24" src="https://iili.io/3cUq0OJ.gif" alt="">
+                  </a>            
+                    </div>
+                    <div class="carousel-cell size-large">
+                      <a href="/coupons/">
+                      <img class="h-24" src="https://iili.io/3cUon1V.gif" alt="">
+                  </a>            
+                    </div>
+                   
+                    <div class="carousel-cell size-large">
+                      <a href="/storytelling/">
+                      <img class="h-24" src="https://iili.io/3cUuy1j.gif" alt="">
+                      </a> 
+                    </div>
+                    <div class="carousel-cell">
+                      <a href="/news/">
+                      <img class="h-24" src="https://iili.io/3cUV65F.gif" alt="">
+                  </a>          
+                    </div>
+                    <div class="carousel-cell">
+                      <a href="/hotel/">
+                      <img class="h-24" src="https://iili.io/3csXvhN.png" alt="">
+                  </a>          
+                    </div>
+                    <div class="carousel-cell">
+                      <a href="/notifications/">
+                      <img class="h-24" src="https://iili.io/3cgqBYF.gif" alt="">
+                  </a>          
+                    </div>
+                  </div>
+                   
+                  {% if user.is_authenticated %}
+                  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4">
+                      <div class="flex items-center space-x-3">
+                          {% if user.avatar %}
+                              <img src="{{ user.avatar.url }}" alt="User Avatar" class="w-10 h-10 rounded-full flex-shrink-0">
+                          {% else %}
+                              <div class="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center flex-shrink-0">
+                                  <span class="text-gray-600 dark:text-gray-300 font-medium text-sm">{{ user.username|first|upper }}</span>
+                              </div>
+                          {% endif %}
+                          <a href="{% url 'posts:create' %}" class="flex-1 bg-gray-100 dark:bg-gray-700 rounded-full px-4 py-2 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 transition duration-150 ease-in-out text-sm sm:text-base">
+                              Create Post
+                          </a>
+                      </div>
+                  </div>
+                  {% endif %}
+                  
+                  <!--slideshow-->
+                {% for post in latest_posts %}
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-150 ease-in-out">
+                    <div class="p-5 sm:p-6">
+                        <div class="flex items-center space-x-2 text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-3">
+                            {% if post.subreddit.icon %}
+                                <img src="{{ post.subreddit.icon.url }}" alt="{{ post.subreddit.name }} icon" class="w-5 h-5 rounded-full flex-shrink-0">
+                            {% else %}
+                                <div class="w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center flex-shrink-0 text-gray-500 dark:text-gray-300 text-xs">D/</div>
+                            {% endif %}
+                            <a href="{% url 'subreddits:subreddit_detail' post.subreddit.slug %}" class="font-medium text-gray-800 dark:text-gray-200 hover:underline hover:text-blue-600 dark:hover:text-blue-400">
+                                D/{{ post.subreddit.name }}
+                            </a>
+                            <span>•</span>
+                            <span>Posted by</span>
+                            <a href="{% url 'users:profile' post.author.username %}" class="font-medium text-gray-800 dark:text-gray-200 hover:underline hover:text-blue-600 dark:hover:text-blue-400">
+                                u/{{ post.author.username }}
+                            </a>
+                            <span>•</span>
+                            <span>{{ post.created_at|timesince }} ago</span>
+                        </div>
+                        <h2 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">
+                            <a href="{% url 'posts:detail' post.subreddit.slug post.slug %}" class="hover:underline">{{ post.title }}</a>
+                        </h2>
+                        {% if post.content %}
+                            <p class="text-gray-700 dark:text-gray-300 mb-4">{{ post.content|truncatewords:50 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% empty %}
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 text-center">
+                    <p class="text-gray-600 dark:text-gray-400">No posts yet. Be the first to post!</p>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Sidebar -->
+            <div class="lg:col-span-1">
+                <div class="sticky top-8 space-y-6">
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md">
+                        <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                            <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Popular Communities</h3>
+                        </div>
+                        <div class="p-4 space-y-3">
+                            {% for subreddit in subreddits %}
+                            <a href="{% url 'subreddits:subreddit_detail' subreddit.slug %}" class="flex items-center space-x-3 group p-2 -m-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition duration-150 ease-in-out">
+                                {% if subreddit.icon %}
+                                    <img src="{{ subreddit.icon.url }}" alt="{{ subreddit.name }}" class="w-8 h-8 rounded-full flex-shrink-0">
+                                {% else %}
+                                    <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center flex-shrink-0">
+                                        <span class="text-gray-500 dark:text-gray-300 text-xs font-medium">D/</span>
+                                    </div>
+                                {% endif %}
+                                <div class="flex-1 overflow-hidden">
+                                    <p class="text-sm font-medium text-gray-900 dark:text-gray-100 truncate group-hover:text-blue-600 dark:group-hover:text-blue-400">D/{{ subreddit.name }}</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ subreddit.subscriber_count }} member{{ subreddit.subscriber_count|pluralize }}</p>
+                                </div>
+                            </a>
+                            {% empty %}
+                            <p class="text-sm text-gray-500 dark:text-gray-400">No communities found.</p>
+                            {% endfor %}
+                        </div>
+                        {% if user.is_authenticated %}
+                        <div class="p-4 border-t border-gray-200 dark:border-gray-700">
+                            <a href="{% url 'subreddits:create' %}" class="block w-full text-center bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800 text-white font-medium rounded-lg text-sm py-2.5 px-4 transition duration-150 ease-in-out">
+                                Create Community
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %} 

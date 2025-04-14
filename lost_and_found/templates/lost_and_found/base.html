@@ -1,0 +1,62 @@
+{% extends 'base/base.html' %}
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    reddit: {
+                        DEFAULT: '#FF4500',
+                        dark: '#cc3700',
+                        light: '#ff6f3f',
+                    }
+                }
+            }
+        }
+    }
+</script>
+
+{% block extra_css %}
+<style>
+    .lost-found-card {
+        transition: transform 0.2s;
+    }
+    .lost-found-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .item-image {
+        height: 200px;
+        object-fit: cover;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <nav class="text-sm text-gray-500 mb-6">
+        <ol class="list-reset flex space-x-2">
+            <li><a href="{% url 'home' %}" class="text-reddit hover:underline">Home</a></li>
+            <li>/</li>
+            <li class="text-sm text-gray-700 font-medium">Lost & Found</li>
+        </ol>
+    </nav>
+
+    <div class="flex justify-between items-center mb-6">
+    
+    </div>
+
+    {% if messages %}
+        <div class="space-y-3 mb-6">
+            {% for message in messages %}
+                <div class="p-4 rounded-lg shadow text-white bg-{{ message.tags }}-500 flex justify-between items-center">
+                    <span>{{ message }}</span>
+                    <button type="button" class="text-white" onclick="this.parentElement.remove()">&times;</button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% block lost_and_found_content %}{% endblock %}
+</div>
+{% endblock %}

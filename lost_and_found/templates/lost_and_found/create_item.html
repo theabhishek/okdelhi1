@@ -1,0 +1,96 @@
+{% extends 'lost_and_found/base.html' %}
+
+{% block lost_and_found_content %}
+<div class="flex justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50 to-white min-h-screen">
+    <div class="w-full max-w-2xl space-y-8 bg-white p-10 rounded-3xl shadow-2xl border border-gray-200">
+      <div class="text-center">
+        <h2 class="text-3xl font-extrabold text-gray-900">Report Lost or Found Item</h2>
+        <p class="mt-2 text-sm text-gray-500">Help us return valuable belongings to their rightful owners.</p>
+      </div>
+  
+      <form method="post" enctype="multipart/form-data" class="space-y-6">
+        {% csrf_token %}
+  
+        <div>
+          <label for="{{ form.item_type.id_for_label }}" class="block text-sm font-medium text-gray-700">Item Type</label>
+          <div class="mt-1">
+            {{ form.item_type }}
+          </div>
+          {% if form.item_type.errors %}
+            <p class="mt-1 text-sm text-red-600">{{ form.item_type.errors }}</p>
+          {% endif %}
+        </div>
+  
+        <div>
+          <label for="{{ form.title.id_for_label }}" class="block text-sm font-medium text-gray-700">Title</label>
+          <div class="mt-1">
+            {{ form.title }}
+          </div>
+          {% if form.title.errors %}
+            <p class="mt-1 text-sm text-red-600">{{ form.title.errors }}</p>
+          {% endif %}
+        </div>
+  
+        <div>
+          <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700">Description</label>
+          <div class="mt-1">
+            {{ form.description }}
+          </div>
+          {% if form.description.errors %}
+            <p class="mt-1 text-sm text-red-600">{{ form.description.errors }}</p>
+          {% endif %}
+        </div>
+  
+        <div>
+          <label for="{{ form.location.id_for_label }}" class="block text-sm font-medium text-gray-700">Location</label>
+          <div class="mt-1">
+            {{ form.location }}
+          </div>
+          {% if form.location.errors %}
+            <p class="mt-1 text-sm text-red-600">{{ form.location.errors }}</p>
+          {% endif %}
+        </div>
+  
+        <div>
+          <label for="{{ form.date_lost_found.id_for_label }}" class="block text-sm font-medium text-gray-700">Date Lost/Found</label>
+          <div class="mt-1">
+            {{ form.date_lost_found }}
+          </div>
+          {% if form.date_lost_found.errors %}
+            <p class="mt-1 text-sm text-red-600">{{ form.date_lost_found.errors }}</p>
+          {% endif %}
+        </div>
+  
+        <div>
+          <label for="{{ form.contact_number.id_for_label }}" class="block text-sm font-medium text-gray-700">Contact Number</label>
+          <div class="mt-1">
+            {{ form.contact_number }}
+          </div>
+          {% if form.contact_number.errors %}
+            <p class="mt-1 text-sm text-red-600">{{ form.contact_number.errors }}</p>
+          {% endif %}
+        </div>
+  
+        <div>
+          <label for="{{ form.image.id_for_label }}" class="block text-sm font-medium text-gray-700">Image (Optional)</label>
+          <div class="mt-1">
+            {{ form.image }}
+          </div>
+          {% if form.image.errors %}
+            <p class="mt-1 text-sm text-red-600">{{ form.image.errors }}</p>
+          {% endif %}
+        </div>
+  
+        <div class="flex flex-col sm:flex-row sm:space-x-4 space-y-2 sm:space-y-0">
+          <button type="submit" class="w-full inline-flex items-center justify-center px-6 py-3 text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl text-sm font-semibold shadow-lg transition">
+            <i class="fas fa-paper-plane mr-2"></i> Submit for Approval
+          </button>
+          <a href="{% url 'lost_and_found:item_list' %}" class="w-full inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 rounded-xl text-sm font-semibold shadow-sm transition">
+            <i class="fas fa-times mr-2"></i> Cancel
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+{% endblock %} 

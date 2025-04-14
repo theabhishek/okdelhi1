@@ -1,0 +1,447 @@
+{% extends 'bus_service/base_bus.html' %}
+
+{% block bus_content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Left Panel - Plan Your Journey -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm" style="background-color: #e6f3fc; border-radius: 12px;">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="rounded-circle bg-danger p-2 me-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" class="bi bi-train-front" viewBox="0 0 16 16">
+                                <path d="M5.621 1.485c1.815-.454 2.943-.454 4.758 0 .784.196 1.743.673 2.527 1.119.688.39 1.094 1.148 1.094 1.979V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V4.583c0-.831.406-1.588 1.094-1.979.784-.446 1.743-.923 2.527-1.119Zm5.4 1.01c-1.503-.37-2.539-.37-4.042 0-.77.19-1.715.646-2.431 1.05A.984.984 0 0 0 4 4.583v8.992h8V4.583a.984.984 0 0 0-.548-1.038c-.716-.404-1.661-.86-2.431-1.05Z"/>
+                                <path d="M6 13.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5Zm-2-7a1 1 0 1 1 0 2 1 1 0 0 1 0-2Zm9 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2ZM4.5 5a.5.5 0 0 0-.5.5v2a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 0-.5-.5h-7Z"/>
+                            </svg>
+                        </div>
+                        <h4 class="mb-0 fw-bold">Plan Your Journey</h4>
+                    </div>
+                    <p class="mb-4 text-muted">Click here to plan through <a href="#" class="text-primary">Interactive Map</a></p>
+                    
+                    <form method="post" id="route-search-form">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="origin-search" class="form-label fw-bold">From</label>
+                            <div class="position-relative">
+                                <select class="form-select" id="origin-search" aria-label="From station">
+                                    <option selected>SHAHEED STHAL (NEW BUS ADDA)</option>
+                                </select>
+                                <input type="hidden" name="origin_id" id="origin_id">
+                                <div id="origin-suggestions" class="list-group mt-1" style="display: none; position: absolute; z-index: 1000; width: 100%; max-height: 300px; overflow-y: auto;"></div>
+                                <div id="origin-error" class="text-danger mt-1"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="destination-search" class="form-label fw-bold">To</label>
+                            <div class="position-relative">
+                                <select class="form-select" id="destination-search" aria-label="To station">
+                                    <option selected>DWARKA SECTOR - 12</option>
+                                </select>
+                                <input type="hidden" name="destination_id" id="destination_id">
+                                <div id="destination-suggestions" class="list-group mt-1" style="display: none; position: absolute; z-index: 1000; width: 100%; max-height: 300px; overflow-y: auto;"></div>
+                                <div id="destination-error" class="text-danger mt-1"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Leaving</label>
+                            <div class="d-flex gap-2">
+                                <div class="flex-grow-1">
+                                    <button class="btn btn-light w-100 border" type="button">Now</button>
+                                </div>
+                                <div>
+                                    <button class="btn btn-outline-primary" type="button">Change Time</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <p class="fw-bold mb-2">Advanced Filter</p>
+                            <div class="d-flex gap-2">
+                                <div class="form-check border rounded p-3 flex-grow-1">
+                                    <input class="form-check-input" type="radio" name="routeOption" id="shortestRoute" checked>
+                                    <label class="form-check-label d-flex align-items-center" for="shortestRoute">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt me-2" viewBox="0 0 16 16">
+                                            <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10"/>
+                                            <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                                        </svg>
+                                        <span>Shortest Route</span>
+                                    </label>
+                                </div>
+                                <div class="form-check border rounded p-3 flex-grow-1">
+                                    <input class="form-check-input" type="radio" name="routeOption" id="minInterchange">
+                                    <label class="form-check-label d-flex align-items-center" for="minInterchange">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-right me-2" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5m14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5"/>
+                                        </svg>
+                                        <span>Minimum Interchange</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-danger btn-lg" type="submit">Show Route & Fare</button>
+                            <button class="btn btn-outline-secondary" type="reset">Reset</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Middle Section - Stats and Map -->
+        <div class="col-md-4 mb-4">
+            <div class="row mb-4">
+                <!-- Statistics Cards -->
+                <div class="col-4">
+                    <div class="card text-center h-100">
+                        <div class="card-body">
+                            <h2 class="text-success fw-bold">394</h2>
+                            <p class="small mb-0">Total Network Length (km) *</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card text-center h-100">
+                        <div class="card-body">
+                            <h2 class="text-success fw-bold">12</h2>
+                            <p class="small mb-0">Total no of Lines *</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card text-center h-100">
+                        <div class="card-body">
+                            <h2 class="text-success fw-bold">289</h2>
+                            <p class="small mb-0">Total no of Stations *</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 mt-2">
+                    <p class="small text-muted">* Including NOIDA-Greater NOIDA Aqua Line, Rapid Metro Gurugram.</p>
+                </div>
+            </div>
+            
+            <!-- Interactive Map Section -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <div class="d-flex align-items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-map me-2 text-primary" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M15.817.113A.5.5 0 0 1 16 .5v14a.5.5 0 0 1-.402.49l-5 1a.502.502 0 0 1-.196 0L5.5 15.01l-4.902.98A.5.5 0 0 1 0 15.5v-14a.5.5 0 0 1 .402-.49l5-1a.5.5 0 0 1 .196 0L10.5.99l4.902-.98a.5.5 0 0 1 .415.103M10 1.91l-4-.8v12.98l4 .8zm1 12.98 4-.8V1.11l-4 .8zm-6-.8V1.11l-4 .8v12.98z"/>
+                            </svg>
+                            <h5 class="mb-0">Interactive Metro Map</h5>
+                        </div>
+                        <a href="#" class="btn btn-sm btn-outline-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
+                                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z"/>
+                            </svg>
+                        </a>
+                    </div>
+                    <p class="text-muted small">Plan your journey using interactive and clickable map.</p>
+                    <div class="text-center">
+                        <img src="https://i.imgur.com/PJ4QDM4.png" alt="Metro Map" class="img-fluid rounded" style="max-height: 200px;">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Station Finder -->
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-search me-2 text-primary" viewBox="0 0 16 16">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                        </svg>
+                        <h5 class="mb-0">Know Your Station</h5>
+                    </div>
+                    <div class="input-group mt-3">
+                        <input type="text" class="form-control" placeholder="Search Metro Station">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Section - Notices & Alerts -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="rounded-circle bg-warning p-2 me-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" class="bi bi-bell-fill" viewBox="0 0 16 16">
+                                <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
+                            </svg>
+                        </div>
+                        <h4 class="mb-0 fw-bold">Notices & Alerts</h4>
+                    </div>
+                    
+                    <!-- Alert Item 1 -->
+                    <div class="card shadow-sm mb-3">
+                        <div class="card-body p-3">
+                            <div class="d-flex">
+                                <div class="me-3">
+                                    <div class="rounded-circle bg-warning p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" class="bi bi-bell-fill" viewBox="0 0 16 16">
+                                            <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="small text-muted mb-1">06/04/2025</p>
+                                    <p class="mb-0">LAJPAT NAGAR–SAKET G BLOCK CORRIDOR OF DELHI METRO TO COME UP AS INDIA'S FIRST 3-COACH METRO LINE</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Alert Item 2 -->
+                    <div class="card shadow-sm mb-3">
+                        <div class="card-body p-3">
+                            <div class="d-flex">
+                                <div class="me-3">
+                                    <div class="rounded-circle bg-warning p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" class="bi bi-bell-fill" viewBox="0 0 16 16">
+                                            <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="small text-muted mb-1">05/04/2025</p>
+                                    <p class="mb-0">DMRC SIGNS MoU WITH INDIAN RAILWAYS; DMRC WILL PROCURE AUTOMATIC WHEEL PROFILE MEASUREMENT SYSTEMS FOR INDIAN RAILWAYS</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Alert Item 3 -->
+                    <div class="card shadow-sm mb-3">
+                        <div class="card-body p-3">
+                            <div class="d-flex">
+                                <div class="me-3">
+                                    <div class="rounded-circle bg-warning p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" class="bi bi-bell-fill" viewBox="0 0 16 16">
+                                            <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="small text-muted mb-1">04/04/2025</p>
+                                    <p class="mb-0">DMRC UNVEILS 'SMART DOOR-TO-DOOR TRAVEL' WITH DMRC MOMENTUM दिल्ली यात्री 2.0 APP</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Results Section -->
+    {% if routes %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-light">
+                    <h4 class="mb-0">Available Routes</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for route in routes %}
+                            <div class="col-md-6 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-header bg-primary text-white">
+                                        <h5 class="mb-0">
+                                            Route {{ route.route_short_name }}
+                                            <small>({{ route.route_long_name }})</small>
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <p>
+                                            <strong>Agency:</strong> {{ route.agency.agency_name }}<br>
+                                            <strong>Type:</strong> {{ route.get_route_type_display }}
+                                        </p>
+                                        
+                                        {% if route.realtime_vehicles %}
+                                            <div class="mt-3">
+                                                <h6 class="mb-3">Active Buses</h6>
+                                                <div class="list-group">
+                                                    {% for vehicle in route.realtime_vehicles %}
+                                                        <div class="list-group-item">
+                                                            <div class="d-flex justify-content-between align-items-center">
+                                                                <strong>Bus {{ vehicle.label }}</strong>
+                                                                <span class="badge bg-success">Active</span>
+                                                            </div>
+                                                            <div class="d-flex justify-content-between mt-2">
+                                                                <small>Status: {{ vehicle.current_status }}</small>
+                                                                <small>Speed: {{ vehicle.speed }} km/h</small>
+                                                            </div>
+                                                            <div class="d-flex justify-content-end mt-1">
+                                                                <small class="text-muted">Last Update: {{ vehicle.timestamp|date:"g:i A" }}</small>
+                                                            </div>
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        {% else %}
+                                            <div class="alert alert-secondary mt-3">
+                                                <i class="fas fa-info-circle me-2"></i>
+                                                Real-time bus information is currently unavailable.
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const originInput = document.getElementById('origin-search');
+    const destinationInput = document.getElementById('destination-search');
+    const originIdInput = document.getElementById('origin_id');
+    const destinationIdInput = document.getElementById('destination_id');
+    const originSuggestions = document.getElementById('origin-suggestions');
+    const destinationSuggestions = document.getElementById('destination-suggestions');
+    const originError = document.getElementById('origin-error');
+    const destinationError = document.getElementById('destination-error');
+    const form = document.getElementById('route-search-form');
+
+    // Function to format stop display
+    function formatStopOption(stop) {
+        let text = stop.stop_name;
+        if (stop.stop_code) {
+            text += ` (${stop.stop_code})`;
+        }
+        return text;
+    }
+
+    // Function to show suggestions
+    function showSuggestions(suggestionsDiv, stops, input, idInput, errorDiv) {
+        suggestionsDiv.innerHTML = '';
+        
+        if (stops.length === 0) {
+            suggestionsDiv.style.display = 'none';
+            return;
+        }
+        
+        stops.forEach(stop => {
+            const div = document.createElement('div');
+            div.className = 'list-group-item list-group-item-action';
+            const displayText = formatStopOption(stop);
+            div.textContent = displayText;
+            
+            div.onclick = () => {
+                input.value = displayText;
+                idInput.value = stop.stop_id;
+                errorDiv.textContent = ''; // Clear any error message
+                suggestionsDiv.style.display = 'none';
+            };
+            
+            suggestionsDiv.appendChild(div);
+        });
+        
+        suggestionsDiv.style.display = 'block';
+    }
+
+    // Function to handle input changes
+    async function handleInput(input, idInput, suggestionsDiv, errorDiv) {
+        const query = input.value.trim();
+        
+        if (query.length < 2) {
+            suggestionsDiv.style.display = 'none';
+            return;
+        }
+
+        try {
+            console.log('Searching for:', query);
+            const response = await fetch(`/bus/stops/search/?q=${encodeURIComponent(query)}`);
+            
+            if (!response.ok) {
+                throw new Error(`Server returned ${response.status}`);
+            }
+            
+            const data = await response.json();
+            console.log('Found stops:', data.stops);
+            
+            // Show suggestions
+            showSuggestions(suggestionsDiv, data.stops, input, idInput, errorDiv);
+
+            // If there's only one match and it exactly matches the input, select it
+            if (data.stops.length === 1) {
+                const exactMatch = data.stops[0];
+                const displayText = formatStopOption(exactMatch);
+                if (displayText.toLowerCase() === query.toLowerCase()) {
+                    input.value = displayText;
+                    idInput.value = exactMatch.stop_id;
+                    suggestionsDiv.style.display = 'none';
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching stops:', error);
+            errorDiv.textContent = 'Error loading suggestions';
+            suggestionsDiv.style.display = 'none';
+        }
+    }
+
+    // Add input event listeners with debounce
+    let originTimeout;
+    let destinationTimeout;
+
+    originInput.addEventListener('input', () => {
+        clearTimeout(originTimeout);
+        originIdInput.value = ''; // Clear the ID when user starts typing
+        originError.textContent = ''; // Clear any error message
+        originTimeout = setTimeout(() => 
+            handleInput(originInput, originIdInput, originSuggestions, originError), 300);
+    });
+
+    destinationInput.addEventListener('input', () => {
+        clearTimeout(destinationTimeout);
+        destinationIdInput.value = ''; // Clear the ID when user starts typing
+        destinationError.textContent = ''; // Clear any error message
+        destinationTimeout = setTimeout(() => 
+            handleInput(destinationInput, destinationIdInput, destinationSuggestions, destinationError), 300);
+    });
+
+    // Close suggestions when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!originInput.contains(e.target) && !originSuggestions.contains(e.target)) {
+            originSuggestions.style.display = 'none';
+        }
+        if (!destinationInput.contains(e.target) && !destinationSuggestions.contains(e.target)) {
+            destinationSuggestions.style.display = 'none';
+        }
+    });
+
+    // Validate form before submission
+    form.addEventListener('submit', function(e) {
+        let isValid = true;
+        
+        // Validate origin
+        if (!originIdInput.value) {
+            e.preventDefault();
+            originError.textContent = 'Please select a valid origin stop';
+            isValid = false;
+        }
+        
+        // Validate destination
+        if (!destinationIdInput.value) {
+            e.preventDefault();
+            destinationError.textContent = 'Please select a valid destination stop';
+            isValid = false;
+        }
+        
+        return isValid;
+    });
+});
+</script>
+{% endblock %} 

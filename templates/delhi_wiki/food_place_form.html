@@ -1,0 +1,9 @@
+{% extends 'delhi_wiki/form.html' %}
+
+{% block title %}Create Food Place{% endblock %}
+
+{% block wiki_content %}
+{% with title="Create Food Place" submit_text="Create Food Place" cancel_url="delhi_wiki:food_place_list" %}
+{{ block.super }}
+{% endwith %}
+{% endblock %} 

@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}Privacy Policy{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-8">
+    <div class="bg-white rounded-lg shadow-lg p-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-6">Privacy Policy</h1>
+        
+        <div class="prose prose-lg max-w-none">
+            <p class="text-gray-600 mb-4">
+                Last updated: {% now "F d, Y" %}
+            </p>
+            
+            <h2 class="text-2xl font-semibold text-gray-800 mt-8 mb-4">1. Information We Collect</h2>
+            <p class="text-gray-600 mb-4">
+                We collect information that you provide directly to us, including:
+            </p>
+            <ul class="list-disc list-inside text-gray-600 space-y-2">
+                <li>Account information (username, email, password)</li>
+                <li>Profile information (avatar, bio, preferences)</li>
+                <li>Content you post (text, images, links)</li>
+                <li>Communications with other users</li>
+                <li>Device and usage information</li>
+            </ul>
+            
+            <h2 class="text-2xl font-semibold text-gray-800 mt-8 mb-4">2. How We Use Your Information</h2>
+            <p class="text-gray-600 mb-4">
+                We use the information we collect to:
+            </p>
+            <ul class="list-disc list-inside text-gray-600 space-y-2">
+                <li>Provide and maintain our services</li>
+                <li>Improve and personalize your experience</li>
+                <li>Communicate with you about our services</li>
+                <li>Monitor and analyze usage patterns</li>
+                <li>Detect and prevent fraud or abuse</li>
+            </ul>
+            
+            <h2 class="text-2xl font-semibold text-gray-800 mt-8 mb-4">3. Information Sharing</h2>
+            <p class="text-gray-600 mb-4">
+                We do not sell your personal information. We may share your information with:
+            </p>
+            <ul class="list-disc list-inside text-gray-600 space-y-2">
+                <li>Service providers who assist in operating our platform</li>
+                <li>Law enforcement when required by law</li>
+                <li>Other users as part of the normal operation of our services</li>
+            </ul>
+            
+            <h2 class="text-2xl font-semibold text-gray-800 mt-8 mb-4">4. Data Security</h2>
+            <p class="text-gray-600 mb-4">
+                We implement appropriate security measures to protect your information. However, no method of transmission over the internet is 100% secure.
+            </p>
+            
+            <h2 class="text-2xl font-semibold text-gray-800 mt-8 mb-4">5. Your Rights</h2>
+            <p class="text-gray-600 mb-4">
+                You have the right to:
+            </p>
+            <ul class="list-disc list-inside text-gray-600 space-y-2">
+                <li>Access your personal information</li>
+                <li>Correct inaccurate information</li>
+                <li>Request deletion of your information</li>
+                <li>Opt-out of certain data uses</li>
+            </ul>
+            
+            <h2 class="text-2xl font-semibold text-gray-800 mt-8 mb-4">6. Cookies and Tracking</h2>
+            <p class="text-gray-600 mb-4">
+                We use cookies and similar tracking technologies to improve your experience and analyze usage patterns. You can control cookies through your browser settings.
+            </p>
+            
+            <h2 class="text-2xl font-semibold text-gray-800 mt-8 mb-4">7. Changes to This Policy</h2>
+            <p class="text-gray-600 mb-4">
+                We may update this privacy policy from time to time. We will notify you of any changes by updating the "Last updated" date at the top of this policy.
+            </p>
+            
+            <h2 class="text-2xl font-semibold text-gray-800 mt-8 mb-4">8. Contact Us</h2>
+            <p class="text-gray-600">
+                If you have any questions about this Privacy Policy, please contact us at:
+                <a href="mailto:privacy@example.com" class="text-blue-600 hover:text-blue-800">privacy@example.com</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %} 

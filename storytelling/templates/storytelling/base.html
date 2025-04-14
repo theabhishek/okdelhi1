@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+<!-- Custom Tailwind-friendly styles (optional) -->
+<style>
+    .story-card:hover {
+        transform: translateY(-5px);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <!-- Breadcrumb -->
+    <nav class="mb-4 text-sm text-gray-500">
+        <ol class="flex space-x-2">
+            <li><a href="{% url 'storytelling:story_list' %}" class="hover:underline text-blue-600">Stories</a></li>
+            {% block breadcrumb %}{% endblock %}
+        </ol>
+    </nav>
+
+    <!-- Django Messages -->
+    {% if messages %}
+    <div class="mb-4 space-y-2">
+        {% for message in messages %}
+        <div class="p-4 rounded-md text-sm font-medium 
+            {% if message.tags == 'success' %}bg-green-100 text-green-700
+            {% elif message.tags == 'error' %}bg-red-100 text-red-700
+            {% elif message.tags == 'warning' %}bg-yellow-100 text-yellow-700
+            {% else %}bg-blue-100 text-blue-700{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% block storytelling_content %}{% endblock %}
+</div>
+{% endblock %}

@@ -1,0 +1,266 @@
+{% extends "delhi_wiki/base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="bg-white rounded-lg shadow-lg p-6">
+        <h1 class="text-xl font-bold mb-6 text-center text-gray-800">Delhi Metro Journey Planner</h1>
+        
+       
+
+        <!-- Route Finder Tab -->
+        <div id="routeSection" class="tab-content">
+            <form method="post" class="mb-8">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="find_route">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="source" class="block text-sm font-medium text-gray-700 mb-2">From Station</label>
+                        <select name="source" id="source" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+                            <option value="">Select Source Station</option>
+                            {% for line, line_stations in stations_by_line.items %}
+                                <optgroup label="{{ line.name }}">
+                                    {% for station in line_stations %}
+                                        <option value="{{ station.id }}" {% if source.id == station.id %}selected{% endif %}>
+                                            {{ station.name }}{% if station.is_interchange %} (Interchange){% endif %}
+                                        </option>
+                                    {% endfor %}
+                                </optgroup>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label for="destination" class="block text-sm font-medium text-gray-700 mb-2">To Station</label>
+                        <select name="destination" id="destination" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+                            <option value="">Select Destination Station</option>
+                            {% for line, line_stations in stations_by_line.items %}
+                                <optgroup label="{{ line.name }}">
+                                    {% for station in line_stations %}
+                                        <option value="{{ station.id }}" {% if destination.id == station.id %}selected{% endif %}>
+                                            {{ station.name }}{% if station.is_interchange %} (Interchange){% endif %}
+                                        </option>
+                                    {% endfor %}
+                                </optgroup>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="mt-6 text-center">
+                    <button type="submit" class="bg-blue-600 text-white px-8 py-3 rounded-md hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center mx-auto">
+                        <i class="fas fa-search mr-2"></i>Find Route
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Fare Calculator Tab -->
+        <div id="fareSection" class="tab-content hidden">
+            <form method="post" class="mb-8">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="calculate_fare">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="fare_source" class="block text-sm font-medium text-gray-700 mb-2">From Station</label>
+                        <select name="fare_source" id="fare_source" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+                            <option value="">Select Source Station</option>
+                            {% for line, line_stations in stations_by_line.items %}
+                                <optgroup label="{{ line.name }}">
+                                    {% for station in line_stations %}
+                                        <option value="{{ station.id }}">
+                                            {{ station.name }}{% if station.is_interchange %} (Interchange){% endif %}
+                                        </option>
+                                    {% endfor %}
+                                </optgroup>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label for="fare_destination" class="block text-sm font-medium text-gray-700 mb-2">To Station</label>
+                        <select name="fare_destination" id="fare_destination" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+                            <option value="">Select Destination Station</option>
+                            {% for line, line_stations in stations_by_line.items %}
+                                <optgroup label="{{ line.name }}">
+                                    {% for station in line_stations %}
+                                        <option value="{{ station.id }}">
+                                            {{ station.name }}{% if station.is_interchange %} (Interchange){% endif %}
+                                        </option>
+                                    {% endfor %}
+                                </optgroup>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="mt-6 text-center">
+                    <button type="submit" class="bg-green-600 text-white px-8 py-3 rounded-md hover:bg-green-700 transition-colors duration-200 flex items-center justify-center mx-auto">
+                        <i class="fas fa-calculator mr-2"></i>Calculate Fare
+                    </button>
+                </div>
+            </form>
+
+            {% if fare_result %}
+            <div class="bg-green-50 rounded-lg p-6 border border-green-200">
+                <h3 class="text-xl font-semibold mb-4 text-green-800">Fare Details</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-gray-600"><span class="font-medium">From:</span> {{ fare_source.name }}</p>
+                        <p class="text-gray-600"><span class="font-medium">To:</span> {{ fare_destination.name }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600"><span class="font-medium">Distance:</span> {{ fare_distance }} km</p>
+                        <p class="text-2xl font-bold text-green-600 mt-2">Fare: ₹{{ fare_amount }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        {% if error %}
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
+                <span class="block sm:inline">{{ error }}</span>
+            </div>
+        {% endif %}
+
+        {% if route %}
+            <div class="bg-gray-50 rounded-lg p-6 mb-6 mt-8">
+                <h2 class="text-2xl font-semibold mb-4">Route Details</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-4 rounded-lg shadow-sm">
+                        <p class="text-gray-600"><span class="font-medium">From:</span> {{ source.name }}</p>
+                        <p class="text-gray-600"><span class="font-medium">To:</span> {{ destination.name }}</p>
+                        <p class="text-gray-600"><span class="font-medium">Distance:</span> {{ route.distance }} km</p>
+                        <p class="text-gray-600"><span class="font-medium">Fare:</span> ₹{{ route.fare }}</p>
+                        <p class="text-gray-600"><span class="font-medium">Estimated Time:</span> {{ route.time }} minutes</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow-sm">
+                        <p class="text-gray-600 font-medium mb-2">Metro Lines:</p>
+                        <ul class="space-y-2">
+                            {% for line in metro_lines %}
+                                <li class="flex items-center">
+                                    <span class="w-3 h-3 rounded-full mr-2 {% if line == 'Red Line' %}bg-red-600{% elif line == 'Yellow Line' %}bg-yellow-500{% elif line == 'Blue Line' %}bg-blue-600{% elif line == 'Green Line' %}bg-green-600{% elif line == 'Violet Line' %}bg-purple-600{% elif line == 'Orange Line' %}bg-orange-500{% elif line == 'Magenta Line' %}bg-pink-600{% elif line == 'Pink Line' %}bg-pink-400{% elif line == 'Grey Line' %}bg-gray-500{% elif line == 'Rapid Metro' %}bg-teal-500{% else %}bg-blue-500{% endif %}"></span>
+                                    <span class="text-gray-700 font-medium">{{ line }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                {% if intermediate_stations %}
+                    <div class="mt-8">
+                        <h3 class="text-xl font-semibold mb-4">Route Path</h3>
+                        <div class="relative bg-white p-6 rounded-lg shadow-sm">
+                            <div class="absolute left-8 top-10 bottom-10 w-0.5 bg-gradient-to-b from-blue-500 via-yellow-500 to-red-500"></div>
+                            <ul class="relative space-y-6">
+                                <li class="flex items-center">
+                                    <div class="absolute left-6 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-md"></div>
+                                    <div class="ml-12">
+                                        <p class="font-medium text-gray-800">{{ source.name }}</p>
+                                        <div class="flex space-x-2 mt-1">
+                                            {% for line in source.lines.all %}
+                                                <span class="px-2 py-0.5 rounded-full text-xs text-white {% if line.name == 'Red Line' %}bg-red-600{% elif line.name == 'Yellow Line' %}bg-yellow-500{% elif line.name == 'Blue Line' %}bg-blue-600{% elif line.name == 'Green Line' %}bg-green-600{% elif line.name == 'Violet Line' %}bg-purple-600{% elif line.name == 'Orange Line' %}bg-orange-500{% elif line.name == 'Magenta Line' %}bg-pink-600{% elif line.name == 'Pink Line' %}bg-pink-400{% elif line.name == 'Grey Line' %}bg-gray-500{% elif line.name == 'Rapid Metro' %}bg-teal-500{% else %}bg-blue-500{% endif %}">
+                                                    {{ line.name }}
+                                                </span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </li>
+                                {% for station in intermediate_stations %}
+                                    <li class="flex items-center">
+                                        <div class="absolute left-6 w-4 h-4 bg-gray-300 rounded-full border-2 border-white shadow-md"></div>
+                                        <div class="ml-12">
+                                            <p class="text-gray-600">{{ station }}</p>
+                                            {% if route.interchange_stations.all|length > 0 and station in route.interchange_stations.all|stringformat:"s" %}
+                                                <span class="inline-flex items-center mt-1 px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                                    <i class="fas fa-exchange-alt mr-1"></i>Interchange Station
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                                <li class="flex items-center">
+                                    <div class="absolute left-6 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-md"></div>
+                                    <div class="ml-12">
+                                        <p class="font-medium text-gray-800">{{ destination.name }}</p>
+                                        <div class="flex space-x-2 mt-1">
+                                            {% for line in destination.lines.all %}
+                                                <span class="px-2 py-0.5 rounded-full text-xs text-white {% if line.name == 'Red Line' %}bg-red-600{% elif line.name == 'Yellow Line' %}bg-yellow-500{% elif line.name == 'Blue Line' %}bg-blue-600{% elif line.name == 'Green Line' %}bg-green-600{% elif line.name == 'Violet Line' %}bg-purple-600{% elif line.name == 'Orange Line' %}bg-orange-500{% elif line.name == 'Magenta Line' %}bg-pink-600{% elif line.name == 'Pink Line' %}bg-pink-400{% elif line.name == 'Grey Line' %}bg-gray-500{% elif line.name == 'Rapid Metro' %}bg-teal-500{% else %}bg-blue-500{% endif %}">
+                                                    {{ line.name }}
+                                                </span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if route.interchange_stations.exists %}
+                    <div class="mt-8">
+                        <h3 class="text-xl font-semibold mb-4">Interchange Stations</h3>
+                        <div class="bg-white p-4 rounded-lg shadow-sm">
+                            <ul class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {% for station in route.interchange_stations.all %}
+                                    <li class="flex items-center">
+                                        <i class="fas fa-exchange-alt text-yellow-500 mr-2"></i>
+                                        <span class="text-gray-600">{{ station.name }}</span>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style type="text/css">
+    body {
+        background-color: #f3f4f6;
+    }
+    .site-nav {
+        display: none !important;
+    }
+    .tab-content {
+        transition: opacity 0.3s ease-in-out;
+    }
+    .tab-content.hidden {
+        display: none;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function switchTab(tab) {
+    // Hide all tab contents
+    document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.add('hidden');
+    });
+    
+    // Remove active state from all tabs
+    document.querySelectorAll('[id$="Tab"]').forEach(tabButton => {
+        tabButton.classList.remove('text-blue-600', 'border-blue-600');
+    });
+    
+    // Show selected tab content
+    if (tab === 'route') {
+        document.getElementById('routeSection').classList.remove('hidden');
+        document.getElementById('routeTab').classList.add('text-blue-600', 'border-blue-600');
+    } else {
+        document.getElementById('fareSection').classList.remove('hidden');
+        document.getElementById('fareTab').classList.add('text-blue-600', 'border-blue-600');
+    }
+}
+
+// Set initial active tab
+document.addEventListener('DOMContentLoaded', function() {
+    {% if fare_result %}
+        switchTab('fare');
+    {% else %}
+        switchTab('route');
+    {% endif %}
+});
+</script>
+{% endblock %} 

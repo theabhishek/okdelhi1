@@ -1,0 +1,57 @@
+{% extends 'cab_booking/base.html' %}
+
+{% block cab_booking_content %}
+<div class="card">
+    <div class="card-header">
+        <h4 class="mb-0">My Cab Bookings</h4>
+    </div>
+    <div class="card-body">
+        {% if bookings %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Booking ID</th>
+                        <th>Pickup</th>
+                        <th>Dropoff</th>
+                        <th>Status</th>
+                        <th>Price</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in bookings %}
+                    <tr>
+                        <td>#{{ booking.id }}</td>
+                        <td>{{ booking.pickup_location|truncatechars:30 }}</td>
+                        <td>{{ booking.dropoff_location|truncatechars:30 }}</td>
+                        <td>
+                            <span class="badge {% if booking.status == 'CONFIRMED' %}bg-success
+                                            {% elif booking.status == 'CANCELLED' %}bg-danger
+                                            {% elif booking.status == 'COMPLETED' %}bg-info
+                                            {% else %}bg-warning{% endif %}">
+                                {{ booking.get_status_display }}
+                            </span>
+                        </td>
+                        <td>₹{{ booking.estimated_price|default:"N/A" }}</td>
+                        <td>{{ booking.created_at|date:"M d, Y" }}</td>
+                        <td>
+                            <a href="{% url 'cab_booking:booking_detail' booking.pk %}" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            You haven't made any cab bookings yet.
+            <a href="{% url 'cab_booking:book_cab' %}" class="alert-link">Book your first ride</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

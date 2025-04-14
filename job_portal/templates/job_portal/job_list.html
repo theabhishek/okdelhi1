@@ -1,0 +1,184 @@
+{% extends 'job_portal/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item active">All Jobs</li>
+{% endblock %}
+
+{% block job_portal_content %}
+{% load static %}
+
+<div class="container mx-auto px-4 py-8">
+
+    {% if error_message %}
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
+        <strong class="font-bold">Error:</strong>
+        <span class="block sm:inline">{{ error_message }}</span>
+    </div>
+    {% endif %}
+
+    <div class="flex flex-col md:flex-row md:space-x-6">
+
+        <div class="w-full md:w-1/4 mb-6 md:mb-0">
+            <div class="bg-white shadow-md rounded-lg p-5 sticky top-4">
+                <h5 class="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">Filters</h5>
+                <form method="get">
+                    <div class="mb-4">
+                        <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search Keywords</label>
+                        <input type="text"
+                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2 px-3"
+                               id="search" name="q" value="{{ query|default:'' }}" placeholder="Job title, company...">
+                    </div>
+
+                    <div class="mb-6">
+                        <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                        <select class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2 px-3"
+                                id="category" name="category">
+                            <option value="">All Categories</option>
+                            {% for category in categories %}
+                            <option value="{{ category.id }}" {% if selected_category == category.id|stringformat:"s" %}selected{% endif %}>
+                                {{ category.name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="flex flex-col space-y-2 md:space-y-0 md:flex-row md:space-x-2">
+                         <button type="submit"
+                                class="flex-1 justify-center inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
+                            Apply
+                        </button>
+                        <a href="{% url 'job_portal:job_list' %}"
+                           class="flex-1 justify-center inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
+                           Clear
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="w-full md:w-3/4">
+            <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+                <h2 class="text-2xl font-bold text-gray-800">Available Jobs</h2>
+                {% if user.is_authenticated %}
+                <a href="{% url 'job_portal:create_job' %}"
+                   class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 ease-in-out">
+                    <i class="fas fa-plus mr-2"></i> Post a Job
+                </a>
+                {% endif %}
+            </div>
+
+            {% if page_obj %}
+                <div class="space-y-4">
+                    {% for job in page_obj %}
+                    <div class="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200 ease-in-out">
+                        <div class="p-5">
+                            <div class="flex flex-wrap gap-2 mb-3">
+                                <span class="inline-block bg-indigo-100 text-indigo-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">{{ job.job_type.name }}</span>
+                                <span class="inline-block bg-cyan-100 text-cyan-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">{{ job.category.name }}</span>
+                            </div>
+                            <h4 class="text-lg font-semibold text-gray-900 mb-1 hover:text-indigo-600 transition-colors duration-150">
+                                <a href="{% url 'job_portal:job_detail' job.pk job.slug %}">{{ job.title }}</a>
+                            </h4>
+                            <h6 class="text-sm font-medium text-gray-500 mb-3">{{ job.company }}</h6>
+                            <p class="text-sm text-gray-600 mb-4 line-clamp-3">{{ job.description|truncatewords:30 }}</p>
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                                <div class="text-sm">
+                                    <span class="font-medium text-green-700">
+                                        {% if job.salary_min and job.salary_max %}
+                                            ${{ job.salary_min }} - ${{ job.salary_max }}
+                                        {% elif job.salary_min %}
+                                            From ${{ job.salary_min }}
+                                        {% elif job.salary_max %}
+                                            Up to ${{ job.salary_max }}
+                                        {% else %}
+                                            Salary not specified
+                                        {% endif %}
+                                    </span>
+                                    <span class="text-gray-500 ml-1 sm:ml-3"><i class="fas fa-map-marker-alt mr-1 text-gray-400"></i>{{ job.location }}</span>
+                                </div>
+                                <a href="{% url 'job_portal:job_detail' job.pk job.slug %}"
+                                   class="inline-flex items-center px-3 py-1.5 border border-indigo-300 text-sm font-medium rounded-md text-indigo-700 bg-indigo-50 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
+                                    View Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                {% if page_obj.paginator.num_pages > 1 %}
+                <nav aria-label="Page navigation" class="mt-8">
+                    <ul class="flex justify-center items-center -space-x-px text-sm">
+                        {% if page_obj.has_previous %}
+                        <li>
+                            <a href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_type %}&type={{ selected_type }}{% endif %}"
+                               class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                <span class="sr-only">Previous</span>
+                                <svg class="w-2.5 h-2.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+                                </svg>
+                            </a>
+                        </li>
+                        {% else %}
+                         <li>
+                            <span class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-300 bg-white border border-e-0 border-gray-300 rounded-l-lg dark:bg-gray-800 dark:border-gray-700 dark:text-gray-600 cursor-not-allowed">
+                                <span class="sr-only">Previous</span>
+                                <svg class="w-2.5 h-2.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+                                </svg>
+                            </span>
+                        </li>
+                        {% endif %}
+
+                        {% for num in page_obj.paginator.page_range %}
+                            <li>
+                                {% if page_obj.number == num %}
+                                <a href="#" aria-current="page"
+                                   class="z-10 flex items-center justify-center px-3 h-8 leading-tight text-indigo-600 border border-indigo-300 bg-indigo-50 hover:bg-indigo-100 hover:text-indigo-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">
+                                   {{ num }}
+                                </a>
+                                {% else %}
+                                <a href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_type %}&type={{ selected_type }}{% endif %}"
+                                   class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                   {{ num }}
+                                </a>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                        <li>
+                            <a href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_type %}&type={{ selected_type }}{% endif %}"
+                               class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                <span class="sr-only">Next</span>
+                                <svg class="w-2.5 h-2.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                                </svg>
+                            </a>
+                        </li>
+                        {% else %}
+                        <li>
+                             <span class="flex items-center justify-center px-3 h-8 leading-tight text-gray-300 bg-white border border-gray-300 rounded-r-lg dark:bg-gray-800 dark:border-gray-700 dark:text-gray-600 cursor-not-allowed">
+                                <span class="sr-only">Next</span>
+                                <svg class="w-2.5 h-2.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                                </svg>
+                            </span>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+
+            {% else %}
+                <div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative text-center" role="alert">
+                    <p class="font-medium">No jobs found matching your criteria.</p>
+                    <p class="text-sm">Try adjusting your filters or search terms.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %} 

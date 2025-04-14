@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50">
+    <div class="container mx-auto px-4 py-16">
+        <!-- Header Section -->
+        <div class="max-w-3xl mx-auto text-center mb-16">
+            <h1 class="text-4xl font-bold text-gray-900 mb-6">About Delhi Community Hub</h1>
+            <p class="text-xl text-gray-600">
+                Connecting people with the best coliving spaces, transportation options, and local deals in Delhi.
+            </p>
+        </div>
+
+        <!-- Mission Section -->
+        <div class="bg-white rounded-xl shadow-lg p-8 mb-12">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Our Mission</h2>
+            <p class="text-gray-600 mb-4">
+                At Delhi Community Hub, we're dedicated to making life in Delhi easier and more affordable for everyone. 
+                Whether you're a student, professional, or visitor, we provide the tools and resources you need to:
+            </p>
+            <ul class="list-disc list-inside text-gray-600 space-y-2 mb-6">
+                <li>Find comfortable and affordable living spaces</li>
+                <li>Navigate the city's transportation system</li>
+                <li>Access exclusive deals and discounts</li>
+                <li>Connect with the local community</li>
+            </ul>
+        </div>
+
+        <!-- Team Section -->
+        <div class="bg-white rounded-xl shadow-lg p-8 mb-12">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Our Team</h2>
+            <p class="text-gray-600 mb-4">
+                We're a passionate team of Delhi residents who understand the challenges of finding the right living space 
+                and navigating the city. Our diverse backgrounds in technology, real estate, and urban planning help us 
+                create solutions that truly meet the needs of our community.
+            </p>
+        </div>
+
+        <!-- Values Section -->
+        <div class="bg-white rounded-xl shadow-lg p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Our Values</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Value 1 -->
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-handshake text-2xl text-blue-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Trust</h3>
+                    <p class="text-gray-600">Building reliable and transparent relationships with our users</p>
+                </div>
+
+                <!-- Value 2 -->
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-users text-2xl text-green-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Community</h3>
+                    <p class="text-gray-600">Fostering a supportive and inclusive environment</p>
+                </div>
+
+                <!-- Value 3 -->
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-lightbulb text-2xl text-purple-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Innovation</h3>
+                    <p class="text-gray-600">Continuously improving our platform to serve you better</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

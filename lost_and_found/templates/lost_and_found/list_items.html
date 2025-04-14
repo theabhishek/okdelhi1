@@ -1,0 +1,91 @@
+{% extends 'lost_and_found/base.html' %}
+
+{% block lost_and_found_content %}
+<div class="row">
+    {% for item in items %}
+    <div class="col-md-4">
+        <div class="card lost-found-card">
+            {% if item.image %}
+            <img src="{{ item.image.url }}" class="card-img-top item-image" alt="{{ item.title }}">
+            {% else %}
+            <div class="card-img-top item-image bg-light d-flex align-items-center justify-content-center">
+                <i class="fas fa-image fa-3x text-muted"></i>
+            </div>
+            {% endif %}
+            
+            <span class="badge status-badge {% if item.item_type == 'LOST' %}bg-danger{% else %}bg-success{% endif %}">
+                {{ item.get_item_type_display }}
+            </span>
+            
+            <div class="card-body">
+                <h5 class="card-title">{{ item.title }}</h5>
+                <p class="card-text">{{ item.description|truncatechars:100 }}</p>
+                <p class="card-text">
+                    <small class="text-muted">
+                        <i class="fas fa-map-marker-alt"></i> {{ item.location }}
+                    </small>
+                </p>
+                <p class="card-text">
+                    <small class="text-muted">
+                        <i class="fas fa-calendar"></i> {{ item.date_lost_found|date:"M d, Y" }}
+                    </small>
+                </p>
+                
+                <div class="action-buttons">
+                    {% if item.status == 'APPROVED' %}
+                        <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#contactModal{{ item.id }}">
+                            <i class="fas fa-info-circle"></i> View Details
+                        </button>
+                        {% if user.is_authenticated and user == item.user %}
+                            <a href="{% url 'lost_and_found:mark_resolved' item.pk %}" class="btn btn-outline-success btn-sm">
+                                <i class="fas fa-check"></i> Mark Resolved
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Modal -->
+    <div class="modal fade" id="contactModal{{ item.id }}" tabindex="-1" aria-labelledby="contactModalLabel{{ item.id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="contactModalLabel{{ item.id }}">Item Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h6>Item Information:</h6>
+                    <p><strong>Title:</strong> {{ item.title }}</p>
+                    <p><strong>Type:</strong> {{ item.get_item_type_display }}</p>
+                    <p><strong>Location:</strong> {{ item.location }}</p>
+                    <p><strong>Date:</strong> {{ item.date_lost_found|date:"M d, Y" }}</p>
+                    
+                    <hr>
+                    
+                    <h6>Contact Information:</h6>
+                    <p><strong>Posted by:</strong> {{ item.user.username }}</p>
+                    <p><strong>Contact Number:</strong> {{ item.contact_number }}</p>
+                    
+                    {% if item.description %}
+                    <hr>
+                    <h6>Additional Details:</h6>
+                    <p>{{ item.description }}</p>
+                    {% endif %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info">
+            No items found. Be the first to report a lost or found item!
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %} 

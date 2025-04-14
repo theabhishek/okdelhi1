@@ -1,0 +1,102 @@
+{% extends 'base/base.html' %}
+
+{% block title %}{{ hotel.name }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="p-6">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-800">{{ hotel.name }}</h1>
+                    <span class="px-3 py-1 mt-2 inline-block text-sm rounded-full 
+                        {% if hotel.hotel_type == 'luxury' %}bg-yellow-100 text-yellow-800
+                        {% elif hotel.hotel_type == 'mid-range' %}bg-green-100 text-green-800
+                        {% elif hotel.hotel_type == 'budget' %}bg-blue-100 text-blue-800
+                        {% elif hotel.hotel_type == 'boutique' %}bg-purple-100 text-purple-800
+                        {% elif hotel.hotel_type == 'resort' %}bg-red-100 text-red-800
+                        {% else %}bg-gray-100 text-gray-800{% endif %}">
+                        {{ hotel.get_hotel_type_display }}
+                    </span>
+                </div>
+                {% if user == hotel.created_by or user.is_staff %}
+                <div class="flex space-x-2">
+                    <a href="{% url 'hotel_service:hotel_edit' hotel.pk %}" 
+                       class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                        Edit
+                    </a>
+                    <a href="{% url 'hotel_service:hotel_delete' hotel.pk %}" 
+                       class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">
+                        Delete
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-800 mb-2">Location</h2>
+                    <p class="text-gray-600">{{ hotel.address }}</p>
+                    <p class="text-gray-600 mt-1">{{ hotel.location }}, {{ hotel.city }}</p>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-800 mb-2">Contact Information</h2>
+                    <p class="text-gray-600">{{ hotel.contact_number }}</p>
+                    {% if hotel.email %}
+                    <p class="text-gray-600 mt-1">{{ hotel.email }}</p>
+                    {% endif %}
+                    {% if hotel.website %}
+                    <p class="text-gray-600 mt-1">
+                        <a href="{{ hotel.website }}" target="_blank" class="text-blue-600 hover:text-blue-800">
+                            {{ hotel.website }}
+                        </a>
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-800 mb-2">Price & Timing</h2>
+                    <p class="text-gray-600">{{ hotel.price_range }} per night</p>
+                    <p class="text-gray-600 mt-1">Check-in: {{ hotel.check_in_time|time:"g:i A" }}</p>
+                    <p class="text-gray-600 mt-1">Check-out: {{ hotel.check_out_time|time:"g:i A" }}</p>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-800 mb-2">Booking</h2>
+                    {% if hotel.affiliate_link %}
+                    <a href="{{ hotel.affiliate_link }}" target="_blank" 
+                       class="inline-block bg-green-600 text-white px-6 py-3 rounded-md hover:bg-green-700 text-lg font-medium">
+                        Book Now
+                    </a>
+                    <p class="text-gray-500 text-sm mt-2">You will be redirected to our partner's website for booking</p>
+                    {% else %}
+                    <p class="text-gray-600">Booking information not available</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if hotel.description %}
+            <div class="mt-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-2">Description</h2>
+                <p class="text-gray-600">{{ hotel.description }}</p>
+            </div>
+            {% endif %}
+
+            <div class="mt-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-2">Amenities</h2>
+                <p class="text-gray-600">{{ hotel.amenities }}</p>
+            </div>
+
+            <div class="mt-6">
+                <a href="{% url 'hotel_service:hotel_list' %}" 
+                   class="text-blue-600 hover:text-blue-800 font-medium">
+                    ← Back to Hotels List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

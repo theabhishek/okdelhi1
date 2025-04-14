@@ -1,0 +1,306 @@
+{% extends 'pg_rental/base.html' %}
+
+{% block extra_css %}
+{{ block.super }}
+<style>
+    .search-filters {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+        margin-bottom: 30px;
+    }
+
+    .pg-card {
+        background: white;
+        border: 1px solid #eee;
+        border-radius: 12px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        height: 100%;
+        transition: all 0.3s ease;
+    }
+
+    .pg-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    .pg-image {
+        height: 220px;
+        object-fit: cover;
+        border-radius: 12px 12px 0 0;
+    }
+
+    .pg-details {
+        padding: 20px;
+    }
+
+    .pg-details h5 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 12px;
+    }
+
+    .pg-location {
+        color: #666;
+        font-size: 0.95rem;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+    }
+
+    .pg-location i {
+        color: #42b72a;
+        margin-right: 8px;
+    }
+
+    .pg-price {
+        font-weight: 600;
+        color: #42b72a;
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        border: 1px solid #e0e0e0;
+        padding: 12px 15px;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #42b72a;
+        box-shadow: 0 0 0 3px rgba(66, 183, 42, 0.1);
+        outline: none;
+    }
+
+    .filter-label {
+        font-weight: 500;
+        color: #444;
+        margin-bottom: 8px;
+        font-size: 0.95rem;
+    }
+
+    .btn-search {
+        background: #42b72a;
+        color: white;
+        border: none;
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: 500;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .btn-search:hover {
+        background: #36a420;
+        transform: translateY(-2px);
+    }
+
+    .btn-view {
+        background: #42b72a;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-weight: 500;
+        width: 100%;
+        display: block;
+        text-align: center;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-view:hover {
+        background: #36a420;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .empty-state {
+        padding: 60px 20px;
+        text-align: center;
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        color: #ccc;
+        margin-bottom: 1.5rem;
+    }
+
+    .empty-state h4 {
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state p {
+        color: #666;
+    }
+
+    @media (max-width: 768px) {
+        .search-filters {
+            padding: 20px;
+        }
+
+        .pg-card {
+            margin-bottom: 20px;
+        }
+
+        .pg-image {
+            height: 200px;
+        }
+
+        .pg-details {
+            padding: 15px;
+        }
+
+        .pg-details h5 {
+            font-size: 1.1rem;
+        }
+
+        .filter-label {
+            font-size: 0.9rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block pg_content %}
+<div class="max-w-7xl mx-auto px-4 py-8">
+    <div class="space-y-8">
+        <!-- Search Form -->
+        <div class="bg-white rounded-2xl shadow-lg p-6">
+            <form method="GET" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+                <div class="lg:col-span-2">
+                    <label for="search-q" class="block text-sm font-medium text-gray-700">Search</label>
+                    <input type="text" name="q" id="search-q" value="{{ request.GET.q|default:'' }}"
+                        placeholder="Name or location"
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+
+                <div>
+                    <label for="search-property-type" class="block text-sm font-medium text-gray-700">Property Type</label>
+                    <select name="property_type" id="search-property-type"
+                        class="mt-1 w-full rounded-xl border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                        <option value="">All Types</option>
+                        {% for value, label in property_types %}
+                        <option value="{{ value }}" {% if request.GET.property_type == value|stringformat:"s" %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label for="search-gender" class="block text-sm font-medium text-gray-700">Gender</label>
+                    <select name="gender_preference" id="search-gender"
+                        class="mt-1 w-full rounded-xl border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                        <option value="">All</option>
+                        {% for value, label in gender_preferences %}
+                        <option value="{{ value }}" {% if request.GET.gender_preference == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label for="search-min-price" class="block text-sm font-medium text-gray-700">Min Price</label>
+                    <input type="number" name="min_price" id="search-min-price" value="{{ request.GET.min_price|default:'' }}"
+                        placeholder="₹ Min"
+                        class="mt-1 w-full rounded-xl border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                </div>
+
+                <div>
+                    <label for="search-max-price" class="block text-sm font-medium text-gray-700">Max Price</label>
+                    <input type="number" name="max_price" id="search-max-price" value="{{ request.GET.max_price|default:'' }}"
+                        placeholder="₹ Max"
+                        class="mt-1 w-full rounded-xl border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                </div>
+
+                <div class="flex items-end">
+                    <button type="submit"
+                        class="w-full flex items-center justify-center bg-indigo-600 text-white py-2 px-4 rounded-xl hover:bg-indigo-700 transition text-sm font-medium">
+                        <i class="fas fa-search mr-2"></i> Search
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Listings -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for listing in listings %}
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col">
+                {% if listing.images.first %}
+                <img src="{{ listing.images.first.image.url }}" alt="{{ listing.title }}" class="w-full h-48 object-cover">
+                {% else %}
+                <div class="w-full h-48 bg-gray-100 flex items-center justify-center text-gray-400">
+                    <i class="fas fa-building text-4xl"></i>
+                </div>
+                {% endif %}
+                <div class="p-4 flex flex-col flex-grow">
+                    <h5 class="text-lg font-semibold text-gray-900 truncate">{{ listing.title }}</h5>
+                    <p class="text-sm text-gray-500 flex items-center mt-1"><i class="fas fa-map-marker-alt mr-1"></i> {{ listing.locality }}, {{ listing.city }}</p>
+                    <div class="text-base font-bold text-indigo-600 mt-2">₹{{ listing.price_per_month }}/month</div>
+                    <a href="{% url 'pg_rental:pg_detail' listing.pk %}"
+                        class="mt-auto text-center bg-indigo-500 hover:bg-indigo-600 text-white text-sm py-2 rounded-lg font-medium transition mt-4">
+                        View Details
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-full">
+                <div class="bg-white rounded-xl shadow-md p-8 text-center text-gray-600">
+                    <i class="fas fa-search text-5xl mb-4 text-gray-300"></i>
+                    <h4 class="text-xl font-semibold">No Coliving Spaces Found</h4>
+                    <p class="text-gray-500 mt-1">Try adjusting your filters or check back later.</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if listings.has_other_pages %}
+        <div class="flex justify-center mt-6">
+            <nav class="inline-flex space-x-1" aria-label="Pagination">
+                {% if listings.has_previous %}
+                <a href="?page={{ listings.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+                    class="pagination-btn"><i class="fas fa-chevron-left"></i></a>
+                {% else %}
+                <span class="pagination-btn disabled"><i class="fas fa-chevron-left"></i></span>
+                {% endif %}
+
+                {% for num in listings.paginator.page_range %}
+                    {% if listings.number == num %}
+                    <span class="pagination-btn bg-indigo-500 text-white">{{ num }}</span>
+                    {% elif num > listings.number|add:'-3' and num < listings.number|add:'3' %}
+                    <a href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+                        class="pagination-btn">{{ num }}</a>
+                    {% elif num == listings.number|add:'-3' or num == listings.number|add:'3' %}
+                    <span class="pagination-btn">...</span>
+                    {% endif %}
+                {% endfor %}
+
+                {% if listings.has_next %}
+                <a href="?page={{ listings.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+                    class="pagination-btn"><i class="fas fa-chevron-right"></i></a>
+                {% else %}
+                <span class="pagination-btn disabled"><i class="fas fa-chevron-right"></i></span>
+                {% endif %}
+            </nav>
+        </div>
+        {% endif %}
+
+        <!-- Add Listing Button -->
+        {% if user.is_authenticated %}
+        <div class="text-center">
+            <a href="{% url 'pg_rental:add_listing' %}"
+                class="inline-flex items-center justify-center bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl text-base font-semibold shadow-md transition">
+                <i class="fas fa-plus mr-2"></i> Add New Space
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %} 

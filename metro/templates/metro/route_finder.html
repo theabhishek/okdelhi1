@@ -1,0 +1,80 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-8">Delhi Metro Route Finder</h1>
+    
+    <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+        <form method="POST" class="space-y-4">
+            {% csrf_token %}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="source_station" class="block text-sm font-medium text-gray-700 mb-2">Source Station</label>
+                    <select name="source_station" id="source_station" class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                        <option value="">Select source station</option>
+                        {% for station in stations %}
+                        <option value="{{ station.id }}">{{ station.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label for="destination_station" class="block text-sm font-medium text-gray-700 mb-2">Destination Station</label>
+                    <select name="destination_station" id="destination_station" class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                        <option value="">Select destination station</option>
+                        {% for station in stations %}
+                        <option value="{{ station.id }}">{{ station.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="flex justify-center">
+                <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                    Find Route
+                </button>
+            </div>
+        </form>
+    </div>
+
+    {% if route_data %}
+    <div class="bg-white rounded-lg shadow-lg p-6">
+        <h2 class="text-2xl font-semibold mb-4">Route Information</h2>
+        <div class="space-y-4">
+            <div class="flex justify-between items-center">
+                <span class="text-gray-600">From:</span>
+                <span class="font-medium">{{ route_data.source }}</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-gray-600">To:</span>
+                <span class="font-medium">{{ route_data.destination }}</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-gray-600">Distance:</span>
+                <span class="font-medium">{{ route_data.distance }} km</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-gray-600">Duration:</span>
+                <span class="font-medium">{{ route_data.duration }} minutes</span>
+            </div>
+            <div class="mt-4">
+                <h3 class="text-lg font-semibold mb-2">Route:</h3>
+                <div class="bg-gray-50 p-4 rounded-md">
+                    <ol class="list-decimal list-inside space-y-2">
+                        {% for station in route_data.stations %}
+                        <li>{{ station }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+            <div class="mt-4">
+                <h3 class="text-lg font-semibold mb-2">Lines:</h3>
+                <div class="flex flex-wrap gap-2">
+                    {% for line in route_data.lines %}
+                    <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">{{ line }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %} 

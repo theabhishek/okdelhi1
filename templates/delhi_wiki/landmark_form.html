@@ -1,0 +1,11 @@
+{% extends 'delhi_wiki/form.html' %}
+
+{% block title %}
+    {% if form.instance.pk %}Edit Landmark{% else %}Create Landmark{% endif %}
+{% endblock %}
+
+{% block wiki_content %}
+{% with title=title|default:"Create Landmark" submit_text=submit_text|default:"Create Landmark" cancel_url="delhi_wiki:landmark_list" %}
+{{ block.super }}
+{% endwith %}
+{% endblock %} 

@@ -1,0 +1,115 @@
+{% extends 'lost_and_found/base.html' %}
+
+{% block lost_and_found_content %}
+<div class="bg-white shadow-md rounded-xl p-6">
+    <h4 class="text-xl font-semibold mb-4">My Lost & Found Items</h4>
+
+    {% if items %}
+        <div class="overflow-x-auto">
+            <table class="min-w-full text-sm text-left text-gray-700">
+                <thead class="bg-gray-100 text-gray-700 uppercase text-xs">
+                    <tr>
+                        <th class="px-4 py-3">Title</th>
+                        <th class="px-4 py-3">Type</th>
+                        <th class="px-4 py-3">Status</th>
+                        <th class="px-4 py-3">Date</th>
+                        <th class="px-4 py-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y">
+                    {% for item in items %}
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="px-4 py-3 font-medium">{{ item.title }}</td>
+                        <td class="px-4 py-3">
+                            <span class="px-2 py-1 rounded-full text-white text-xs 
+                                {% if item.item_type == 'LOST' %} bg-red-500 
+                                {% else %} bg-green-500 
+                                {% endif %}">
+                                {{ item.get_item_type_display }}
+                            </span>
+                        </td>
+                        <td class="px-4 py-3">
+                            <span class="px-2 py-1 rounded-full text-white text-xs 
+                                {% if item.status == 'APPROVED' %} bg-green-500 
+                                {% elif item.status == 'REJECTED' %} bg-red-500 
+                                {% elif item.status == 'RESOLVED' %} bg-blue-500 
+                                {% else %} bg-yellow-500 
+                                {% endif %}">
+                                {{ item.get_status_display }}
+                            </span>
+                        </td>
+                        <td class="px-4 py-3">{{ item.date_lost_found|date:"M d, Y" }}</td>
+                        <td class="px-4 py-3 flex flex-wrap gap-2">
+                            <button @click="openModal('modal-{{ item.id }}')" class="px-3 py-1 text-xs border rounded text-reddit border-reddit hover:bg-reddit hover:text-white">
+                                <i class="fas fa-eye mr-1"></i> View
+                            </button>
+                            {% if item.status == 'APPROVED' %}
+                            <a href="{% url 'lost_and_found:mark_resolved' item.pk %}" class="px-3 py-1 text-xs border rounded text-green-600 border-green-600 hover:bg-green-600 hover:text-white">
+                                <i class="fas fa-check mr-1"></i> Mark Resolved
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Tailwind Modal Template per Item -->
+        {% for item in items %}
+        <div x-data="{ show: false }" x-show="show" id="modal-{{ item.id }}" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" style="display: none;">
+            <div @click.away="show = false" class="bg-white w-full max-w-2xl rounded-lg shadow-lg overflow-hidden">
+                <div class="px-6 py-4 border-b flex justify-between items-center">
+                    <h3 class="text-lg font-semibold">{{ item.title }}</h3>
+                    <button @click="show = false" class="text-gray-400 hover:text-gray-700">&times;</button>
+                </div>
+                <div class="p-6 space-y-3">
+                    {% if item.image %}
+                        <img src="{{ item.image.url }}" alt="{{ item.title }}" class="w-full h-48 object-cover rounded">
+                    {% endif %}
+
+                    <p><strong>Description:</strong> {{ item.description }}</p>
+                    <p><strong>Location:</strong> {{ item.location }}</p>
+                    <p><strong>Date:</strong> {{ item.date_lost_found|date:"M d, Y" }}</p>
+                    <p><strong>Contact:</strong> {{ item.contact_number }}</p>
+                    <p><strong>Status:</strong> 
+                        <span class="px-2 py-1 rounded text-white text-sm 
+                            {% if item.status == 'APPROVED' %} bg-green-500 
+                            {% elif item.status == 'REJECTED' %} bg-red-500 
+                            {% elif item.status == 'RESOLVED' %} bg-blue-500 
+                            {% else %} bg-yellow-500 
+                            {% endif %}">
+                            {{ item.get_status_display }}
+                        </span>
+                    </p>
+                    {% if item.approved_at %}
+                        <p><strong>Approved on:</strong> {{ item.approved_at|date:"M d, Y H:i" }}</p>
+                    {% endif %}
+                </div>
+                <div class="px-6 py-4 bg-gray-100 text-right space-x-2">
+                    <button @click="show = false" class="px-4 py-2 text-sm text-gray-600 hover:text-black">Close</button>
+                    {% if item.status == 'APPROVED' %}
+                    <a href="{% url 'lost_and_found:mark_resolved' item.pk %}" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                        <i class="fas fa-check mr-1"></i> Mark Resolved
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <script>
+            function openModal(id) {
+                document.getElementById(id).__x.$data.show = true;
+            }
+        </script>
+
+    {% else %}
+    <div class="p-4 bg-blue-100 text-blue-800 rounded-lg">
+        You haven't reported any lost or found items yet.
+        <a href="{% url 'lost_and_found:create_item' %}" class="underline ml-1 text-blue-600">Report your first item</a>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %} 

@@ -1,0 +1,74 @@
+{% extends 'storytelling/base.html' %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item active" aria-current="page">My Stories</li>
+{% endblock %}
+
+{% block storytelling_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>My Stories</h1>
+    <div>
+        <a href="{% url 'storytelling:create_story' %}" class="btn btn-primary me-2">
+            <i class="fas fa-plus"></i> New Story
+        </a>
+        <a href="{% url 'storytelling:story_list' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-book"></i> All Stories
+        </a>
+    </div>
+</div>
+
+{% if stories %}
+<div class="row">
+    {% for story in stories %}
+    <div class="col-md-6 col-lg-4">
+        <div class="card mb-4">
+            {% if story.image %}
+            <img src="{{ story.image.url }}" class="card-img-top" alt="{{ story.title }}" style="height: 200px; object-fit: cover;">
+            {% endif %}
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="badge bg-{% if story.status == 'APPROVED' %}success{% elif story.status == 'REJECTED' %}danger{% else %}warning{% endif %}">
+                        {{ story.get_status_display }}
+                    </span>
+                    <small class="text-muted">
+                        <i class="fas fa-calendar"></i> {{ story.created_at|date:"F d, Y" }}
+                    </small>
+                </div>
+                
+                <h5 class="card-title">{{ story.title }}</h5>
+                <p class="card-text">{{ story.content|truncatewords:20 }}</p>
+                
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="badge bg-primary">{{ story.get_category_display }}</span>
+                        {% if story.location %}
+                        <small class="text-muted ms-2">
+                            <i class="fas fa-map-marker-alt"></i> {{ story.location }}
+                        </small>
+                        {% endif %}
+                    </div>
+                    <div class="text-muted">
+                        <small>
+                            <i class="fas fa-eye"></i> {{ story.views }}
+                            <i class="fas fa-heart ms-2"></i> {{ story.likes.count }}
+                        </small>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 mt-3">
+                    <a href="{% url 'storytelling:story_detail' story.pk %}" class="btn btn-outline-primary">
+                        <i class="fas fa-eye"></i> View Details
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">
+    <i class="fas fa-info-circle"></i> You haven't shared any stories yet. 
+    <a href="{% url 'storytelling:create_story' %}" class="alert-link">Share your first story!</a>
+</div>
+{% endif %}
+{% endblock %} 

@@ -1,0 +1,9 @@
+{% extends 'delhi_wiki/approval_list.html' %}
+
+{% block title %}Landmark Approval List{% endblock %}
+
+{% block wiki_content %}
+{% with title="Landmark Approval List" items=landmarks approve_url="delhi_wiki:approve_landmark" %}
+{{ block.super }}
+{% endwith %}
+{% endblock %} 

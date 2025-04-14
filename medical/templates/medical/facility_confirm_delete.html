@@ -1,0 +1,34 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Delete Medical Facility{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="p-6">
+                <h1 class="text-2xl font-bold text-gray-800 mb-6">Delete Medical Facility</h1>
+                
+                <p class="text-gray-600 mb-6">
+                    Are you sure you want to delete "{{ facility.name }}"?
+                    This action cannot be undone.
+                </p>
+
+                <form method="post" class="space-y-4">
+                    {% csrf_token %}
+                    <div class="flex justify-end space-x-4">
+                        <a href="{% url 'medical:facility_detail' facility.pk %}" 
+                           class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                            Cancel
+                        </a>
+                        <button type="submit" 
+                                class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
+                            Delete Facility
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

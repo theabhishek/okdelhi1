@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="list-group">
+                <a href="{% url 'notifications:notification_list' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'notification_list' %}active{% endif %}">
+                    All Notifications
+                </a>
+                <a href="{% url 'notifications:create_notification' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'create_notification' %}active{% endif %}">
+                    Create Notification
+                </a>
+                <a href="{% url 'notifications:my_notifications' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'my_notifications' %}active{% endif %}">
+                    My Notifications
+                </a>
+                {% if perms.notifications.can_approve_notification %}
+                <a href="{% url 'notifications:pending_notifications' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'pending_notifications' %}active{% endif %}">
+                    Pending Approvals
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-9">
+            {% block notification_content %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

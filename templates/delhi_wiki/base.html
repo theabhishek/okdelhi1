@@ -1,0 +1,204 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Delhi Wiki{% endblock %}
+
+{% block extra_head %}
+<style>
+    .delhi-wiki-sidebar {
+        display: none !important;
+    }
+    
+    .user-menu-btn {
+        transition: all 0.2s ease;
+    }
+    
+    .user-menu-btn:hover {
+        background-color: #f3f4f6;
+    }
+    
+    /* FAB and dropdown styles */
+    .fab-container {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 999;
+    }
+    
+    .fab-button {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: #4f46e5;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .fab-button:hover {
+        transform: scale(1.05);
+        background-color: #4338ca;
+    }
+    
+    .fab-options {
+        position: absolute;
+        bottom: 70px;
+        right: 0;
+        width: 180px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        overflow: hidden;
+        transition: all 0.3s ease;
+        transform-origin: bottom right;
+    }
+    
+    .fab-options.hidden {
+        transform: scale(0);
+        opacity: 0;
+    }
+    
+    .fab-item {
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        transition: background-color 0.2s ease;
+    }
+    
+    .fab-item:hover {
+        background-color: #f3f4f6;
+    }
+    
+    .fab-item-icon {
+        width: 20px;
+        height: 20px;
+        margin-right: 12px;
+        color: #4f46e5;
+    }
+    
+    @media (max-width: 640px) {
+        .fab-container {
+            bottom: 16px;
+            right: 16px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="min-h-screen">
+    <nav class="bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                  
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="{% url 'delhi_wiki:area_list' %}" class="border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Areas
+                        </a>
+                        <a href="{% url 'delhi_wiki:landmark_list' %}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Landmarks
+                        </a>
+                        <a href="{% url 'delhi_wiki:food_place_list' %}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Food Places
+                        </a>
+                        <a href="{% url 'delhi_wiki:market_list' %}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Markets
+                        </a>
+                        <a href="{% url 'delhi_wiki:event_list' %}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Events
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Redesigned user authentication section -->
+                <div class="flex items-center">
+                    {% if user.is_authenticated %}
+                        <div class="flex items-center space-x-3">
+                           
+                            {% if user.is_superuser %}
+                                <a href="{% url 'delhi_wiki:area_approval_list' %}" class="bg-green-50 hover:bg-green-100 text-green-700 px-3 py-1.5 rounded-md text-sm font-medium transition-colors duration-150 flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    Approve
+                                </a>
+                            {% endif %}
+                       
+                        </div>
+                    {% else %}
+                        <div class="flex items-center space-x-2">
+                            <a href="{% url 'account_login' %}" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-md text-sm font-medium transition-colors duration-150">Login</a>
+                            <a href="{% url 'account_signup' %}" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-md text-sm font-medium transition-colors duration-150">Register</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-8">
+        <div class="w-full">
+            {% if request.resolver_match.url_name == 'area_list' %}
+                <!-- Metro Quick Access Section -->
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <!-- ... existing code ... -->
+                </div>
+            {% endif %}
+            {% block wiki_content %}
+            {% endblock %}
+        </div>
+    </div>
+    
+    <!-- Floating Action Button (FAB) for Create options -->
+    {% if user.is_authenticated %}
+    <div class="fab-container" x-data="{ open: false }">
+        <div class="fab-options" :class="{ 'hidden': !open }">
+            <a href="{% url 'delhi_wiki:area_create' %}" class="fab-item">
+                <svg class="fab-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                <span>Create Area</span>
+            </a>
+            <a href="{% url 'delhi_wiki:landmark_create' %}" class="fab-item">
+                <svg class="fab-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                </svg>
+                <span>Create Landmark</span>
+            </a>
+            <a href="{% url 'delhi_wiki:food_place_create' %}" class="fab-item">
+                <svg class="fab-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                </svg>
+                <span>Create Food Place</span>
+            </a>
+            <a href="{% url 'delhi_wiki:market_create' %}" class="fab-item">
+                <svg class="fab-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                </svg>
+                <span>Create Market</span>
+            </a>
+            <a href="{% url 'delhi_wiki:event_create' %}" class="fab-item">
+                <svg class="fab-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                <span>Create Event</span>
+            </a>
+        </div>
+        <div class="fab-button" @click="open = !open">
+            <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+{% endblock %}

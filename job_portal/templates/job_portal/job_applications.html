@@ -1,0 +1,62 @@
+{% extends 'job_portal/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'job_portal:job_detail' pk=job.pk slug=job.slug %}">{{ job.title }}</a></li>
+    <li class="breadcrumb-item active">Applications</li>
+{% endblock %}
+
+{% block job_portal_content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Applications for {{ job.title }}</h4>
+            </div>
+            <div class="card-body">
+                {% if applications %}
+                    <div class="list-group">
+                        {% for application in applications %}
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">{{ application.applicant.username }}</h5>
+                                    <span class="badge bg-{{ application.status|lower }}">
+                                        {{ application.get_status_display }}
+                                    </span>
+                                </div>
+                                <p class="mb-1">
+                                    <strong>Applied:</strong> {{ application.applied_at|date:"F j, Y" }}
+                                </p>
+                                <p class="mb-1">
+                                    <strong>Cover Letter:</strong> {{ application.cover_letter }}
+                                </p>
+                                <p class="mb-1">
+                                    <strong>Resume:</strong> <a href="{{ application.resume_link }}" target="_blank" class="text-primary">View Resume</a>
+                                </p>
+                                {% if request.user == job.posted_by or request.user.is_superuser %}
+                                    <form method="post" action="{% url 'job_portal:update_application_status' pk=application.pk %}" class="mt-2">
+                                        {% csrf_token %}
+                                        <div class="btn-group">
+                                            <button type="submit" name="status" value="SHORTLISTED" class="btn btn-outline-primary btn-sm">
+                                                Shortlist
+                                            </button>
+                                            <button type="submit" name="status" value="REJECTED" class="btn btn-outline-danger btn-sm">
+                                                Reject
+                                            </button>
+                                            <button type="submit" name="status" value="HIRED" class="btn btn-outline-success btn-sm">
+                                                Hire
+                                            </button>
+                                        </div>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-center">No applications yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

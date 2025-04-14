@@ -1,0 +1,134 @@
+{% extends 'delhi_wiki/base.html' %}
+
+{% block title %}{{ area.name }} - Delhi Wiki{% endblock %}
+
+{% block content %}
+<div class="bg-gray-100 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+        
+        {% if area.image %}
+            <div class="aspect-w-16 aspect-h-7"> {# Responsive aspect ratio #}
+                <img src="{{ area.image.url }}" alt="{{ area.name }}" class="w-full h-full object-cover object-center">
+            </div>
+        {% else %}
+            <div class="w-full h-64 bg-gradient-to-r from-gray-200 to-gray-300 flex items-center justify-center">
+                 {# You could add an SVG icon here for a nicer placeholder #}
+                <span class="text-gray-500 text-lg font-medium">No image available</span>
+            </div>
+        {% endif %}
+        
+        <div class="p-6 md:p-8 lg:p-10">
+            <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-6 pb-4 border-b border-gray-200">
+                <h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-2 sm:mb-0">{{ area.name }}</h1>
+                {% if area.is_verified %}
+                    <span class="flex-shrink-0 px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs sm:text-sm font-semibold tracking-wide self-start sm:self-center">
+                        Verified
+                    </span>
+                {% endif %}
+            </div>
+            
+            <div class="mb-8 space-y-4">
+                <div>
+                    <h2 class="text-lg font-semibold text-gray-500 uppercase tracking-wider mb-1">Location</h2>
+                    <p class="text-gray-700 text-base leading-relaxed">{{ area.location }}</p>
+                </div>
+                
+                <div>
+                    <h2 class="text-lg font-semibold text-gray-500 uppercase tracking-wider mb-1">Description</h2>
+                    <p class="text-gray-700 text-base leading-relaxed">{{ area.description }}</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <div class="bg-white border border-gray-200 rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow duration-200">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Landmarks</h2>
+                    {% if landmarks %}
+                        <ul class="space-y-3">
+                            {% for landmark in landmarks %}
+                                <li>
+                                    <a href="{% url 'delhi_wiki:landmark_detail' landmark.slug %}" class="text-indigo-600 hover:text-indigo-800 hover:underline font-medium transition duration-150 ease-in-out">
+                                        {{ landmark.name }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-gray-500 italic">No landmarks added yet.</p>
+                    {% endif %}
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'delhi_wiki:landmark_create' %}" class="mt-5 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-800">
+                            + Add Landmark
+                        </a>
+                    {% endif %}
+                </div>
+                
+                <div class="bg-white border border-gray-200 rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow duration-200">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Food Places</h2>
+                    {% if food_places %}
+                        <ul class="space-y-3">
+                            {% for food_place in food_places %}
+                                <li>
+                                    <a href="{% url 'delhi_wiki:food_place_detail' food_place.slug %}" class="text-indigo-600 hover:text-indigo-800 hover:underline font-medium transition duration-150 ease-in-out">
+                                        {{ food_place.name }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-gray-500 italic">No food places added yet.</p>
+                    {% endif %}
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'delhi_wiki:food_place_create' %}" class="mt-5 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-800">
+                            + Add Food Place
+                        </a>
+                    {% endif %}
+                </div>
+                
+                <div class="bg-white border border-gray-200 rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow duration-200">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Markets</h2>
+                    {% if markets %}
+                        <ul class="space-y-3">
+                            {% for market in markets %}
+                                <li>
+                                    <a href="{% url 'delhi_wiki:market_detail' market.slug %}" class="text-indigo-600 hover:text-indigo-800 hover:underline font-medium transition duration-150 ease-in-out">
+                                        {{ market.name }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-gray-500 italic">No markets added yet.</p>
+                    {% endif %}
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'delhi_wiki:market_create' %}" class="mt-5 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-800">
+                            + Add Market
+                        </a>
+                    {% endif %}
+                </div>
+                
+                <div class="bg-white border border-gray-200 rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow duration-200">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Upcoming Events</h2>
+                    {% if events %}
+                        <ul class="space-y-4"> {# Slightly more space for events with dates #}
+                            {% for event in events %}
+                                <li>
+                                    <a href="{% url 'delhi_wiki:event_detail' event.slug %}" class="text-indigo-600 hover:text-indigo-800 hover:underline font-medium transition duration-150 ease-in-out">
+                                        {{ event.title }}
+                                    </a>
+                                    <p class="text-sm text-gray-500 mt-1">{{ event.start_date|date:"F j, Y" }}</p>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-gray-500 italic">No upcoming events.</p>
+                    {% endif %}
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'delhi_wiki:event_create' %}" class="mt-5 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-800">
+                            + Add Event
+                        </a>
+                    {% endif %}
+                </div>
+                
+            </div> </div> </div> </div> 
+{% endblock %} 

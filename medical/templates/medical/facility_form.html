@@ -1,0 +1,105 @@
+{% extends 'base/base.html' %}
+
+{% block title %}{% if facility %}Edit{% else %}Add{% endif %} Medical Facility{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="p-6">
+                <h1 class="text-2xl font-bold text-gray-800 mb-6">
+                    {% if facility %}Edit{% else %}Add{% endif %} Medical Facility
+                </h1>
+
+                <form method="post" class="space-y-6">
+                    {% csrf_token %}
+                    
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700">Facility Name</label>
+                        <input type="text" name="name" id="name" value="{{ facility.name|default:'' }}" required
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label for="facility_type" class="block text-sm font-medium text-gray-700">Facility Type</label>
+                        <select name="facility_type" id="facility_type" required
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            <option value="">Select a type</option>
+                            <option value="hospital" {% if facility.facility_type == 'hospital' %}selected{% endif %}>Hospital</option>
+                            <option value="clinic" {% if facility.facility_type == 'clinic' %}selected{% endif %}>Clinic</option>
+                            <option value="pharmacy" {% if facility.facility_type == 'pharmacy' %}selected{% endif %}>Pharmacy</option>
+                            <option value="diagnostic" {% if facility.facility_type == 'diagnostic' %}selected{% endif %}>Diagnostic Center</option>
+                            <option value="other" {% if facility.facility_type == 'other' %}selected{% endif %}>Other</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
+                        <textarea name="address" id="address" rows="3" required
+                                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">{{ facility.address|default:'' }}</textarea>
+                    </div>
+
+                    <div>
+                        <label for="location" class="block text-sm font-medium text-gray-700">Area/Locality</label>
+                        <input type="text" name="location" id="location" value="{{ facility.location|default:'' }}" required
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label for="city" class="block text-sm font-medium text-gray-700">City</label>
+                        <input type="text" name="city" id="city" value="{{ facility.city|default:'Delhi' }}" required
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label for="contact_number" class="block text-sm font-medium text-gray-700">Contact Number</label>
+                        <input type="tel" name="contact_number" id="contact_number" value="{{ facility.contact_number|default:'' }}" required
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" name="email" id="email" value="{{ facility.email|default:'' }}"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label for="website" class="block text-sm font-medium text-gray-700">Website</label>
+                        <input type="url" name="website" id="website" value="{{ facility.website|default:'' }}"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                        <textarea name="description" id="description" rows="3"
+                                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">{{ facility.description|default:'' }}</textarea>
+                    </div>
+
+                    <div>
+                        <label for="services" class="block text-sm font-medium text-gray-700">Services</label>
+                        <textarea name="services" id="services" rows="3" required
+                                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">{{ facility.services|default:'' }}</textarea>
+                    </div>
+
+                    <div>
+                        <label for="opening_hours" class="block text-sm font-medium text-gray-700">Opening Hours</label>
+                        <textarea name="opening_hours" id="opening_hours" rows="3" required
+                                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">{{ facility.opening_hours|default:'' }}</textarea>
+                    </div>
+
+                    <div class="flex justify-end space-x-4">
+                        <a href="{% url 'medical:facility_list' %}" 
+                           class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                            Cancel
+                        </a>
+                        <button type="submit" 
+                                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                            {% if facility %}Update{% else %}Add{% endif %} Facility
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

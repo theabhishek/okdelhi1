@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Delhi Metro Journey Planner</h5>
+                    <p class="card-text">Plan your metro journey across Delhi with ease.</p>
+                    <a href="{% url 'delhi_wiki:metro_route_finder' %}" class="btn btn-primary">Plan Journey</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">PG & Hostel Rentals</h5>
+                    <p class="card-text">Find and book PG accommodations and hostels in Delhi.</p>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'pg_rental:listings' %}" class="btn btn-primary">PG and Rooms</a>
+                        <a href="{% url 'pg_rental:listings' %}?property_type=Hostel" class="btn btn-outline-primary">Find Hostels</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Create a Post</h5>
+                    <p class="card-text">Share your thoughts, experiences, or questions with the community.</p>
+                    <a href="{% url 'posts:create' %}" class="btn btn-primary">
+                        <i class="fas fa-plus-circle me-2"></i>Create Post
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

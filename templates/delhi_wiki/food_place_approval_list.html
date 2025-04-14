@@ -1,0 +1,9 @@
+{% extends 'delhi_wiki/approval_list.html' %}
+
+{% block title %}Food Place Approval List{% endblock %}
+
+{% block wiki_content %}
+{% with title="Food Place Approval List" items=food_places approve_url="delhi_wiki:approve_food_place" %}
+{{ block.super }}
+{% endwith %}
+{% endblock %} 

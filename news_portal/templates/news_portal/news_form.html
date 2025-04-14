@@ -1,0 +1,84 @@
+{% extends 'news_portal/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block news_content %}
+<style>
+    .form-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .form-header {
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+
+    .form-header h4 {
+        margin: 0;
+        font-size: 24px;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background 0.3s ease;
+    }
+
+    .btn-primary {
+        background: #007bff;
+        color: white;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background: #0056b3;
+    }
+
+    .btn-secondary {
+        background: #f8f9fa;
+        color: #333;
+        border: 1px solid #ccc;
+    }
+
+    .btn-secondary:hover {
+        background: #e2e6ea;
+    }
+</style>
+
+<div class="form-container">
+    <div class="form-header">
+        <h4>{{ title }}</h4>
+    </div>
+    <div class="form-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form|crispy }}
+
+            <div class="form-actions">
+                <a href="{% if news %}{% url 'news_portal:news_detail' slug=news.slug %}{% else %}{% url 'news_portal:news_list' %}{% endif %}" class="btn btn-secondary">
+                    ← Cancel
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    {% if news %}Update{% else %}Create{% endif %} News
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<br><br>
+{% endblock %}

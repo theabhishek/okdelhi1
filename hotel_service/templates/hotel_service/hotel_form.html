@@ -1,0 +1,130 @@
+{% extends 'base/base.html' %}
+
+{% block title %}{% if hotel %}Edit{% else %}Add{% endif %} Hotel{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="p-6">
+                <h1 class="text-2xl font-bold text-gray-800 mb-6">
+                    {% if hotel %}Edit{% else %}Add{% endif %} Hotel
+                </h1>
+
+                <form method="post" class="space-y-6">
+                    {% csrf_token %}
+                    
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700">Hotel Name</label>
+                        <input type="text" name="name" id="name" value="{{ hotel.name|default:'' }}" required
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label for="hotel_type" class="block text-sm font-medium text-gray-700">Hotel Type</label>
+                        <select name="hotel_type" id="hotel_type" required
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            <option value="">Select a type</option>
+                            <option value="budget" {% if hotel.hotel_type == 'budget' %}selected{% endif %}>Budget</option>
+                            <option value="mid-range" {% if hotel.hotel_type == 'mid-range' %}selected{% endif %}>Mid-Range</option>
+                            <option value="luxury" {% if hotel.hotel_type == 'luxury' %}selected{% endif %}>Luxury</option>
+                            <option value="boutique" {% if hotel.hotel_type == 'boutique' %}selected{% endif %}>Boutique</option>
+                            <option value="resort" {% if hotel.hotel_type == 'resort' %}selected{% endif %}>Resort</option>
+                            <option value="other" {% if hotel.hotel_type == 'other' %}selected{% endif %}>Other</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
+                        <textarea name="address" id="address" rows="3" required
+                                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">{{ hotel.address|default:'' }}</textarea>
+                    </div>
+
+                    <div>
+                        <label for="location" class="block text-sm font-medium text-gray-700">Area/Locality</label>
+                        <input type="text" name="location" id="location" value="{{ hotel.location|default:'' }}" required
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label for="city" class="block text-sm font-medium text-gray-700">City</label>
+                        <input type="text" name="city" id="city" value="{{ hotel.city|default:'Delhi' }}" required
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label for="contact_number" class="block text-sm font-medium text-gray-700">Contact Number</label>
+                        <input type="tel" name="contact_number" id="contact_number" value="{{ hotel.contact_number|default:'' }}" required
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" name="email" id="email" value="{{ hotel.email|default:'' }}"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label for="website" class="block text-sm font-medium text-gray-700">Website</label>
+                        <input type="url" name="website" id="website" value="{{ hotel.website|default:'' }}"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                        <textarea name="description" id="description" rows="3"
+                                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">{{ hotel.description|default:'' }}</textarea>
+                    </div>
+
+                    <div>
+                        <label for="amenities" class="block text-sm font-medium text-gray-700">Amenities</label>
+                        <textarea name="amenities" id="amenities" rows="3" required
+                                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">{{ hotel.amenities|default:'' }}</textarea>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="check_in_time" class="block text-sm font-medium text-gray-700">Check-in Time</label>
+                            <input type="time" name="check_in_time" id="check_in_time" 
+                                   value="{{ hotel.check_in_time|default:'14:00'|time:'H:i' }}" required
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="check_out_time" class="block text-sm font-medium text-gray-700">Check-out Time</label>
+                            <input type="time" name="check_out_time" id="check_out_time" 
+                                   value="{{ hotel.check_out_time|default:'12:00'|time:'H:i' }}" required
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="price_range" class="block text-sm font-medium text-gray-700">Price Range</label>
+                        <input type="text" name="price_range" id="price_range" value="{{ hotel.price_range|default:'' }}" required
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                               placeholder="e.g., ₹1000-₹3000">
+                    </div>
+
+                    <div>
+                        <label for="affiliate_link" class="block text-sm font-medium text-gray-700">Affiliate Booking Link</label>
+                        <input type="url" name="affiliate_link" id="affiliate_link" value="{{ hotel.affiliate_link|default:'' }}" required
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                               placeholder="e.g., https://www.oyorooms.com/...">
+                        <p class="mt-1 text-sm text-gray-500">Enter the affiliate link from OYO, Booking.com, etc.</p>
+                    </div>
+
+                    <div class="flex justify-end space-x-4">
+                        <a href="{% url 'hotel_service:hotel_list' %}" 
+                           class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                            Cancel
+                        </a>
+                        <button type="submit" 
+                                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                            {% if hotel %}Update{% else %}Add{% endif %} Hotel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

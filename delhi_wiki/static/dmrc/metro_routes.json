@@ -1,0 +1,124 @@
+{
+    "routes": {
+        "Kashmere Gate-Rajiv Chowk": {
+            "distance": 4.2,
+            "fare": 20,
+            "interchange_stations": [],
+            "lines": ["Yellow Line"],
+            "time": 15,
+            "intermediate_stations": [
+                "Civil Lines",
+                "Chandni Chowk",
+                "Chawri Bazar",
+                "New Delhi"
+            ]
+        },
+        "Rajiv Chowk-Central Secretariat": {
+            "distance": 2.7,
+            "fare": 20,
+            "interchange_stations": [],
+            "lines": ["Yellow Line"],
+            "time": 10,
+            "intermediate_stations": [
+                "Patel Chowk",
+                "Udyog Bhawan"
+            ]
+        },
+        "Kashmere Gate-Welcome": {
+            "distance": 3.5,
+            "fare": 20,
+            "interchange_stations": [],
+            "lines": ["Red Line"],
+            "time": 12,
+            "intermediate_stations": [
+                "Tis Hazari",
+                "Pulbangash",
+                "Pratap Nagar",
+                "Shastri Park",
+                "Seelampur"
+            ]
+        },
+        "Rajiv Chowk-Mandi House": {
+            "distance": 1.8,
+            "fare": 10,
+            "interchange_stations": [],
+            "lines": ["Blue Line"],
+            "time": 8,
+            "intermediate_stations": [
+                "Barakhamba Road"
+            ]
+        },
+        "Mandi House-Central Secretariat": {
+            "distance": 2.1,
+            "fare": 20,
+            "interchange_stations": [],
+            "lines": ["Violet Line"],
+            "time": 9,
+            "intermediate_stations": [
+                "Janpath"
+            ]
+        },
+        "Hauz Khas-Botanical Garden": {
+            "distance": 7.5,
+            "fare": 30,
+            "interchange_stations": [],
+            "lines": ["Magenta Line"],
+            "time": 25,
+            "intermediate_stations": [
+                "Panchsheel Park",
+                "IIT Delhi",
+                "R.K. Puram",
+                "Munirka",
+                "Terminal 1-IGI Airport",
+                "Shankar Vihar",
+                "Vasant Vihar"
+            ]
+        },
+        "Kashmere Gate-New Delhi": {
+            "distance": 3.8,
+            "fare": 20,
+            "interchange_stations": ["New Delhi"],
+            "lines": ["Yellow Line"],
+            "time": 14,
+            "intermediate_stations": [
+                "Civil Lines",
+                "Chandni Chowk",
+                "Chawri Bazar"
+            ]
+        },
+        "New Delhi-Rajiv Chowk": {
+            "distance": 1.2,
+            "fare": 10,
+            "interchange_stations": [],
+            "lines": ["Yellow Line"],
+            "time": 5,
+            "intermediate_stations": []
+        },
+        "Rajiv Chowk-Hauz Khas": {
+            "distance": 8.5,
+            "fare": 30,
+            "interchange_stations": [],
+            "lines": ["Yellow Line"],
+            "time": 28,
+            "intermediate_stations": [
+                "Jor Bagh",
+                "INA",
+                "AIIMS",
+                "Green Park",
+                "Malviya Nagar"
+            ]
+        }
+    },
+    "fares": {
+        "0-2": 10,
+        "2-5": 20,
+        "5-12": 30,
+        "12-21": 40,
+        "21-32": 50,
+        "32+": 60
+    },
+    "interchange_penalties": {
+        "time": 10,
+        "fare": 0
+    }
+} 

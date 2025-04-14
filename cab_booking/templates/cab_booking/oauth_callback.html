@@ -1,0 +1,26 @@
+{% extends 'cab_booking/base.html' %}
+
+{% block cab_booking_content %}
+<div class="card">
+    <div class="card-header">
+        <h4 class="mb-0">Uber Authorization</h4>
+    </div>
+    <div class="card-body text-center">
+        {% if error %}
+        <div class="alert alert-danger">
+            <i class="fas fa-exclamation-circle"></i> {{ error }}
+        </div>
+        <a href="{% url 'cab_booking:book_cab' %}" class="btn btn-primary">
+            <i class="fas fa-arrow-left"></i> Back to Booking
+        </a>
+        {% else %}
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i> Successfully connected to Uber!
+        </div>
+        <a href="{% url 'cab_booking:book_cab' %}" class="btn btn-primary">
+            <i class="fas fa-car"></i> Book a Ride
+        </a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,27 @@
+{% extends 'job_portal/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block breadcrumb %}
+<li><a href="{% url 'job_portal:job_list' %}" class="text-blue-600 hover:underline">All Jobs</a></li>
+<li><a href="{% url 'job_portal:job_detail' pk=job.pk slug=job.slug %}" class="text-blue-600 hover:underline">{{ job.title }}</a></li>
+<li class="text-gray-500">Apply</li>
+{% endblock %}
+
+{% block job_portal_content %}
+<div class="max-w-2xl mx-auto px-4 py-6">
+    <div class="bg-white rounded-2xl shadow-lg p-6 sm:p-8">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-2">Apply for {{ job.title }}</h2>
+        <p class="text-sm text-gray-500 mb-6">at {{ job.company }}</p>
+
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            {{ form|crispy }}
+            
+            <div class="flex flex-col sm:flex-row gap-4 mt-6">
+                <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700 transition">Submit Application</button>
+                <a href="{% url 'job_portal:job_detail' pk=job.pk slug=job.slug %}" class="text-gray-700 border border-gray-300 px-6 py-2 rounded-xl hover:bg-gray-100 transition text-center">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

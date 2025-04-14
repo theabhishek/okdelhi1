@@ -1,0 +1,11 @@
+{% extends 'delhi_wiki/form.html' %}
+
+{% block title %}
+    {% if form.instance.pk %}Edit Area{% else %}Create Area{% endif %}
+{% endblock %}
+
+{% block wiki_content %}
+{% with title=title|default:"Create Area" submit_text=submit_text|default:"Create Area" cancel_url="delhi_wiki:area_list" %}
+{{ block.super }}
+{% endwith %}
+{% endblock %} 

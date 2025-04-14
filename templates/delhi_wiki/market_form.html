@@ -1,0 +1,9 @@
+{% extends 'delhi_wiki/form.html' %}
+
+{% block title %}Create Market{% endblock %}
+
+{% block wiki_content %}
+{% with title="Create Market" submit_text="Create Market" cancel_url="delhi_wiki:market_list" %}
+{{ block.super }}
+{% endwith %}
+{% endblock %} 

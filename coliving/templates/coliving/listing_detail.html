@@ -1,0 +1,79 @@
+{% extends 'base/base.html' %}
+
+{% block title %}{{ coliving_space.title }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Listing Details -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+        <h1 class="text-3xl font-bold mb-4">{{ coliving_space.title }}</h1>
+        
+        <!-- Property Type and Gender Preference -->
+        <div class="flex space-x-4 mb-4">
+            <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                {{ coliving_space.get_property_type_display }}
+            </span>
+            <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">
+                {{ coliving_space.get_gender_preference_display }}
+            </span>
+        </div>
+        
+        <!-- Price -->
+        <div class="text-2xl font-bold text-gray-800 mb-4">
+            ₹{{ coliving_space.price_per_month }}/month
+        </div>
+        
+        <!-- Description -->
+        <div class="prose max-w-none mb-6">
+            {{ coliving_space.description|linebreaks }}
+        </div>
+        
+        <!-- Location -->
+        <div class="mb-6">
+            <h2 class="text-xl font-semibold mb-2">Location</h2>
+            <p class="text-gray-600">
+                {{ coliving_space.locality }}, {{ coliving_space.city }}<br>
+                {{ coliving_space.state }} - {{ coliving_space.pincode }}
+            </p>
+        </div>
+        
+        <!-- Add Review Button -->
+        {% if user.is_authenticated %}
+            <a href="{% url 'coliving:add_review' listing_id=coliving_space.id %}" 
+               class="inline-block px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors">
+                Add Review
+            </a>
+        {% else %}
+            <p class="text-gray-600">
+                <a href="{% url 'account_login' %}" class="text-blue-500 hover:underline">Login</a> to add a review
+            </p>
+        {% endif %}
+    </div>
+    
+    <!-- Reviews Section -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-2xl font-bold mb-6">Reviews</h2>
+        
+        {% if reviews %}
+            <div class="space-y-6">
+                {% for review in reviews %}
+                    <div class="border-b border-gray-200 pb-6">
+                        <div class="flex items-center mb-2">
+                            <div class="flex items-center">
+                                {% for i in "12345"|make_list %}
+                                    <span class="text-{% if forloop.counter <= review.rating %}yellow-400{% else %}gray-300{% endif %}">★</span>
+                                {% endfor %}
+                            </div>
+                            <span class="ml-2 text-gray-500">by {{ review.user.username }}</span>
+                            <span class="ml-2 text-gray-400 text-sm">{{ review.created_at|date:"F j, Y" }}</span>
+                        </div>
+                        <p class="text-gray-700">{{ review.comment }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-gray-500">No reviews yet. Be the first to review!</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

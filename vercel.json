@@ -1,0 +1,37 @@
+{
+    "builds": [{
+        "src": "redditClone/wsgi.py",
+        "use": "@vercel/python",
+        "config": { 
+            "maxLambdaSize": "15mb", 
+            "runtime": "python3.12",
+            "installCommand": "pip install --no-cache-dir -r requirements.txt",
+            "buildCommand": "python manage.py collectstatic --noinput"
+        }
+    }],
+    "routes": [
+        {
+            "src": "/static/(.*)",
+            "dest": "/static/$1"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "redditClone/wsgi.py"
+        }
+    ],
+    "env": {
+        "PYTHONPATH": "/vercel/path0",
+        "DEBUG": "False",
+        "SECRET_KEY": "@secret_key",
+        "ALLOWED_HOSTS": ".vercel.app,okdelhi.in",
+        "CSRF_TRUSTED_ORIGINS": "https://okdelhi.in,https://*.vercel.app",
+        "DATABASE_URL": "@database_url",
+        "AWS_ACCESS_KEY_ID": "AKIAUQOFPOESDI3E3S2O",
+        "AWS_SECRET_ACCESS_KEY": "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",
+        "AWS_STORAGE_BUCKET_NAME": "okdelhi",
+        "AWS_S3_REGION_NAME": "us-east-1",
+        "DELHI_METRO_API_KEY": "TGfInm24tkWHJxifYHU8v4lxU5O4aT0N",
+        "DELHI_BUS_API_KEY": "TGfInm24tkWHJxifYHU8v4lxU5O4aT0N",
+        "GTFS_REALTIME_API_KEY": "9TSATtmfGnkbQIa9p2nu99ZSNbTfpK09JBsWqSIj"
+    }
+}

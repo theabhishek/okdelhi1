@@ -1,0 +1,46 @@
+{% extends 'job_portal/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item active">My Applications</li>
+{% endblock %}
+
+{% block job_portal_content %}
+<div class="w-full px-4 py-6">
+    <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-md">
+      <div class="border-b px-6 py-4">
+        <h4 class="text-xl font-semibold text-gray-800">My Job Applications</h4>
+      </div>
+      <div class="p-6">
+        {% if applications %}
+          <div class="space-y-4">
+            {% for application in applications %}
+              <div class="p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
+                  <h5 class="text-lg font-medium text-blue-600">
+                    <a href="{% url 'job_portal:job_detail' pk=application.job.pk slug=application.job.slug %}" class="hover:underline">
+                      {{ application.job.title }}
+                    </a>
+                  </h5>
+                  <span class="inline-block mt-2 sm:mt-0 px-3 py-1 rounded-full text-sm font-semibold text-white bg-{{ application.status|lower }}">
+                    {{ application.get_status_display }}
+                  </span>
+                </div>
+                <p class="text-sm text-gray-700"><strong>Company:</strong> {{ application.job.company }}</p>
+                <p class="text-sm text-gray-700"><strong>Applied:</strong> {{ application.applied_at|date:"F j, Y" }}</p>
+                <p class="text-sm text-gray-700"><strong>Cover Letter:</strong> {{ application.cover_letter }}</p>
+                <p class="text-sm text-gray-700">
+                  <strong>Resume:</strong>
+                  <a href="{{ application.resume_link }}" target="_blank" class="text-blue-500 hover:underline">View Resume</a>
+                </p>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="text-center text-gray-600">You haven't applied for any jobs yet.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  
+{% endblock %} 

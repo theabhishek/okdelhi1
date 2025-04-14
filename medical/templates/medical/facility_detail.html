@@ -1,0 +1,84 @@
+{% extends 'base/base.html' %}
+
+{% block title %}{{ facility.name }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="p-6">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-800">{{ facility.name }}</h1>
+                    <span class="px-3 py-1 mt-2 inline-block text-sm rounded-full 
+                        {% if facility.facility_type == 'hospital' %}bg-blue-100 text-blue-800
+                        {% elif facility.facility_type == 'clinic' %}bg-green-100 text-green-800
+                        {% elif facility.facility_type == 'pharmacy' %}bg-purple-100 text-purple-800
+                        {% elif facility.facility_type == 'diagnostic' %}bg-yellow-100 text-yellow-800
+                        {% else %}bg-gray-100 text-gray-800{% endif %}">
+                        {{ facility.get_facility_type_display }}
+                    </span>
+                </div>
+                {% if user == facility.created_by or user.is_staff %}
+                <div class="flex space-x-2">
+                    <a href="{% url 'medical:facility_edit' facility.pk %}" 
+                       class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                        Edit
+                    </a>
+                    <a href="{% url 'medical:facility_delete' facility.pk %}" 
+                       class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">
+                        Delete
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-800 mb-2">Location</h2>
+                    <p class="text-gray-600">{{ facility.address }}</p>
+                    <p class="text-gray-600 mt-1">{{ facility.location }}, {{ facility.city }}</p>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-800 mb-2">Contact Information</h2>
+                    <p class="text-gray-600">{{ facility.contact_number }}</p>
+                    {% if facility.email %}
+                    <p class="text-gray-600 mt-1">{{ facility.email }}</p>
+                    {% endif %}
+                    {% if facility.website %}
+                    <p class="text-gray-600 mt-1">
+                        <a href="{{ facility.website }}" target="_blank" class="text-blue-600 hover:text-blue-800">
+                            {{ facility.website }}
+                        </a>
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if facility.description %}
+            <div class="mt-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-2">Description</h2>
+                <p class="text-gray-600">{{ facility.description }}</p>
+            </div>
+            {% endif %}
+
+            <div class="mt-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-2">Services</h2>
+                <p class="text-gray-600">{{ facility.services }}</p>
+            </div>
+
+            <div class="mt-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-2">Opening Hours</h2>
+                <p class="text-gray-600">{{ facility.opening_hours }}</p>
+            </div>
+
+            <div class="mt-6">
+                <a href="{% url 'medical:facility_list' %}" 
+                   class="text-blue-600 hover:text-blue-800 font-medium">
+                    ← Back to Facilities List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

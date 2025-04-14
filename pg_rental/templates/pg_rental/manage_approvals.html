@@ -1,0 +1,87 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Manage PG Listings{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-8">Manage PG Listings</h1>
+
+    <!-- Pending Listings -->
+    <div class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4 text-yellow-600">Pending Approvals</h2>
+        {% if pending_listings %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for listing in pending_listings %}
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-semibold mb-2">{{ listing.title }}</h3>
+                        <p class="text-gray-600 mb-4">{{ listing.description|truncatechars:100 }}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-500">Posted by: {{ listing.owner.username }}</span>
+                            <div class="flex space-x-2">
+                                <form method="post" action="{% url 'pg_rental:update_approval' listing.id %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="status" value="Approved">
+                                    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                                        Approve
+                                    </button>
+                                </form>
+                                <form method="post" action="{% url 'pg_rental:update_approval' listing.id %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="status" value="Rejected">
+                                    <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                                        Reject
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-gray-500">No pending listings to review.</p>
+        {% endif %}
+    </div>
+
+    <!-- Approved Listings -->
+    <div class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4 text-green-600">Approved Listings</h2>
+        {% if approved_listings %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for listing in approved_listings %}
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-semibold mb-2">{{ listing.title }}</h3>
+                        <p class="text-gray-600 mb-4">{{ listing.description|truncatechars:100 }}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-500">Posted by: {{ listing.owner.username }}</span>
+                            <span class="text-green-500">Approved</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-gray-500">No approved listings.</p>
+        {% endif %}
+    </div>
+
+    <!-- Rejected Listings -->
+    <div class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4 text-red-600">Rejected Listings</h2>
+        {% if rejected_listings %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for listing in rejected_listings %}
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-semibold mb-2">{{ listing.title }}</h3>
+                        <p class="text-gray-600 mb-4">{{ listing.description|truncatechars:100 }}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-500">Posted by: {{ listing.owner.username }}</span>
+                            <span class="text-red-500">Rejected</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-gray-500">No rejected listings.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

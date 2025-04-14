@@ -1,0 +1,96 @@
+{% extends 'delhi_wiki/base.html' %}
+
+{% block title %}{{ station.name }} - Delhi Metro{% endblock %}
+
+{% block wiki_content %}
+<div class="bg-white rounded-lg shadow-md overflow-hidden">
+    {% if station.image %}
+        <img src="{{ station.image.url }}" alt="{{ station.name }}" class="w-full h-64 object-cover">
+    {% else %}
+        <div class="w-full h-64 bg-gray-200 flex items-center justify-center">
+            <span class="text-gray-500">No image available</span>
+        </div>
+    {% endif %}
+    
+    <div class="p-6">
+        <div class="flex justify-between items-start mb-6">
+            <h1 class="text-3xl font-bold text-gray-900">{{ station.name }}</h1>
+            {% if station.is_interchange %}
+                <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium">
+                    Interchange Station
+                </span>
+            {% endif %}
+        </div>
+
+        {% if station.lines.exists %}
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-3">Metro Lines</h2>
+                <div class="flex flex-wrap gap-2">
+                    {% for line in station.lines.all %}
+                        <span class="px-3 py-1 text-sm rounded-full" style="background-color: {{ line.color }}20; color: {{ line.color }}">
+                            {{ line.name }}
+                        </span>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        {% if station.description %}
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-2">About</h2>
+                <p class="text-gray-600">{{ station.description }}</p>
+            </div>
+        {% endif %}
+
+        <!-- Station Location Map -->
+        <div class="mb-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Location</h2>
+            <div id="map" class="h-96 rounded-lg"></div>
+        </div>
+
+        <!-- Route Finder -->
+        <div class="mt-8 border-t pt-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Plan Your Journey</h2>
+            <form action="{% url 'metro:metro_route_finder' %}" method="post" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {% csrf_token %}
+                <div>
+                    <input type="hidden" name="source" value="{{ station.id }}">
+                    <select name="destination" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">Select Destination Station</option>
+                        {% for other_station in stations %}
+                            {% if other_station != station %}
+                                <option value="{{ other_station.id }}">{{ other_station.name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <button type="submit" class="w-full bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        Find Route
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% block extra_scripts %}
+<script src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&callback=initMap" async defer></script>
+<script>
+    function initMap() {
+        const station = { lat: {{ station.latitude }}, lng: {{ station.longitude }} };
+        
+        const map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 15,
+            center: station
+        });
+
+        new google.maps.Marker({
+            position: station,
+            map: map,
+            title: '{{ station.name }}'
+        });
+    }
+</script>
+{% endblock %}
+{% endblock %} 

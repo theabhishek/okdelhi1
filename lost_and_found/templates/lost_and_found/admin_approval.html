@@ -1,0 +1,94 @@
+{% extends 'lost_and_found/base.html' %}
+
+{% block lost_and_found_content %}
+<div class="card">
+    <div class="card-header">
+        <h4 class="mb-0">Pending Approvals</h4>
+    </div>
+    <div class="card-body">
+        {% if items %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Type</th>
+                        <th>Location</th>
+                        <th>Date</th>
+                        <th>Submitted By</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td>{{ item.title }}</td>
+                        <td>
+                            <span class="badge {% if item.item_type == 'LOST' %}bg-danger{% else %}bg-success{% endif %}">
+                                {{ item.get_item_type_display }}
+                            </span>
+                        </td>
+                        <td>{{ item.location }}</td>
+                        <td>{{ item.date_lost_found|date:"M d, Y" }}</td>
+                        <td>{{ item.user.username }}</td>
+                        <td>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#itemModal{{ item.id }}">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                <a href="{% url 'lost_and_found:approve_item' item.pk %}" class="btn btn-sm btn-outline-success">
+                                    <i class="fas fa-check"></i> Approve
+                                </a>
+                                <a href="{% url 'lost_and_found:reject_item' item.pk %}" class="btn btn-sm btn-outline-danger">
+                                    <i class="fas fa-times"></i> Reject
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="itemModal{{ item.id }}" tabindex="-1" aria-labelledby="itemModalLabel{{ item.id }}" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="itemModalLabel{{ item.id }}">{{ item.title }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    {% if item.image %}
+                                    <img src="{{ item.image.url }}" class="img-fluid mb-3" alt="{{ item.title }}">
+                                    {% endif %}
+                                    
+                                    <p><strong>Description:</strong></p>
+                                    <p>{{ item.description }}</p>
+                                    
+                                    <p><strong>Location:</strong> {{ item.location }}</p>
+                                    <p><strong>Date:</strong> {{ item.date_lost_found|date:"M d, Y" }}</p>
+                                    <p><strong>Contact:</strong> {{ item.contact_number }}</p>
+                                    <p><strong>Submitted by:</strong> {{ item.user.username }}</p>
+                                    <p><strong>Submitted on:</strong> {{ item.created_at|date:"M d, Y H:i" }}</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <a href="{% url 'lost_and_found:approve_item' item.pk %}" class="btn btn-success">
+                                        <i class="fas fa-check"></i> Approve
+                                    </a>
+                                    <a href="{% url 'lost_and_found:reject_item' item.pk %}" class="btn btn-danger">
+                                        <i class="fas fa-times"></i> Reject
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            No pending items for approval.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

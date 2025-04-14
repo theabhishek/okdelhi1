@@ -1,0 +1,9 @@
+{% extends 'delhi_wiki/approval_list.html' %}
+
+{% block title %}Market Approval List{% endblock %}
+
+{% block wiki_content %}
+{% with title="Market Approval List" items=markets approve_url="delhi_wiki:approve_market" %}
+{{ block.super }}
+{% endwith %}
+{% endblock %} 

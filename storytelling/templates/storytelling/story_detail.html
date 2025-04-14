@@ -1,0 +1,159 @@
+{% extends 'storytelling/base.html' %}
+
+{% block breadcrumb %}
+  <span class="text-sm text-gray-500">{{ story.title }}</span>
+{% endblock %}
+
+{% block storytelling_content %}
+<div class="container mx-auto px-4 py-8">
+  <div class="lg:grid lg:grid-cols-3 lg:gap-8">
+
+    <div class="lg:col-span-2 space-y-6">
+
+      <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        {% if story.image %}
+          <img src="{{ story.image.url }}" alt="{{ story.title }}" class="w-full h-64 md:h-96 object-cover">
+        {% endif %}
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-4">
+            <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full">{{ story.get_category_display }}</span>
+            <small class="text-sm text-gray-500">
+              <i class="fas fa-calendar mr-1"></i>{{ story.created_at|date:"F d, Y" }}
+            </small>
+          </div>
+
+          <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ story.title }}</h1>
+
+          <div class="flex items-center mb-4">
+            <img src="https://ui-avatars.com/api/?name={{ story.author.username|urlencode }}"
+                 class="w-10 h-10 rounded-full mr-3" alt="{{ story.author.username }}">
+            <div>
+              <div class="font-semibold text-gray-800">{{ story.author.username }}</div>
+              {% if story.location %}
+                <small class="text-sm text-gray-500 flex items-center">
+                  <i class="fas fa-map-marker-alt mr-1"></i>{{ story.location }}
+                </small>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="prose max-w-none text-gray-700 mb-6">
+            {{ story.content|linebreaks }}
+          </div>
+
+          <div class="flex justify-between items-center border-t border-gray-200 pt-4">
+            <div class="flex space-x-2">
+              <button onclick="likeStory({{ story.pk }})" 
+                      class="px-3 py-1 border border-blue-500 text-blue-600 rounded-md hover:bg-blue-50 text-sm flex items-center like-button"
+                      data-story-id="{{ story.pk }}">
+                <i class="fas fa-heart mr-1 {% if user in story.likes.all %}text-red-500{% endif %}"></i> 
+                <span class="like-text">{% if user in story.likes.all %}Unlike{% else %}Like{% endif %}</span>
+              </button>
+              <button class="px-3 py-1 border border-gray-400 text-gray-600 rounded-md hover:bg-gray-100 text-sm flex items-center">
+                <i class="fas fa-share mr-1"></i> Share
+              </button>
+            </div>
+            <div class="text-sm text-gray-500">
+              <small class="flex items-center space-x-3">
+                <span><i class="fas fa-eye mr-1"></i>{{ story.views }} views</span>
+                <span><i class="fas fa-heart mr-1"></i><span class="likes-count">{{ story.likes.count }}</span> likes</span>
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% if user.is_authenticated and user == story.author %}
+      <div class="bg-white rounded-lg shadow-md">
+        <div class="p-6">
+          <h5 class="text-lg font-semibold text-gray-800 mb-3">Story Status</h5>
+          <div class="p-4 rounded-md text-sm
+            {% if story.status == 'APPROVED' %} bg-green-100 text-green-800 {% elif story.status == 'REJECTED' %} bg-red-100 text-red-800 {% else %} bg-yellow-100 text-yellow-800 {% endif %}">
+             <i class="fas fa-{% if story.status == 'APPROVED' %}check-circle{% elif story.status == 'REJECTED' %}times-circle{% else %}clock{% endif %} mr-2"></i>
+             Status: {{ story.get_status_display }}
+             {% if story.approved_at %}
+               <br>
+               <small class="block mt-1 text-xs">Reviewed on: {{ story.approved_at|date:"F d, Y" }}</small>
+             {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+    </div>
+
+    <div class="lg:col-span-1 space-y-6 mt-6 lg:mt-0">
+
+      <div class="bg-white rounded-lg shadow-md">
+        <div class="px-6 py-4 border-b border-gray-200">
+          <h5 class="text-lg font-semibold text-gray-800">About the Author</h5>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center mb-4">
+            <img src="https://ui-avatars.com/api/?name={{ story.author.username|urlencode }}"
+                 class="w-16 h-16 rounded-full mr-4" alt="{{ story.author.username }}">
+            <div>
+              <h6 class="font-semibold text-gray-800">{{ story.author.username }}</h6>
+              <small class="text-sm text-gray-500">Member since {{ story.author.date_joined|date:"F Y" }}</small>
+            </div>
+          </div>
+          <div>
+            <a href="{% url 'storytelling:my_stories' %}" class="block w-full text-center px-4 py-2 border border-blue-500 text-blue-600 rounded-md hover:bg-blue-50 text-sm">
+              <i class="fas fa-book mr-2"></i>View All Stories
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow-md">
+        <div class="px-6 py-4 border-b border-gray-200">
+          <h5 class="text-lg font-semibold text-gray-800">Share Your Story</h5>
+        </div>
+        <div class="p-6">
+          <p class="text-gray-700 mb-4 text-sm">Have a travel story to share? We'd love to hear it!</p>
+          <a href="{% url 'storytelling:create_story' %}" class="block w-full text-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium">
+            <i class="fas fa-pen mr-2"></i>Write Your Story
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+function likeStory(storyId) {
+    if (!document.querySelector('.like-button').dataset.storyId) return;
+    
+    fetch(`/storytelling/story/${storyId}/like/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            const likeButton = document.querySelector('.like-button');
+            const likeText = likeButton.querySelector('.like-text');
+            const heartIcon = likeButton.querySelector('.fa-heart');
+            const likesCount = document.querySelector('.likes-count');
+            
+            if (data.action === 'liked') {
+                likeText.textContent = 'Unlike';
+                heartIcon.classList.add('text-red-500');
+            } else {
+                likeText.textContent = 'Like';
+                heartIcon.classList.remove('text-red-500');
+            }
+            
+            likesCount.textContent = data.likes_count;
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+</script>
+{% endblock %}

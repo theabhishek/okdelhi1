@@ -1,0 +1,9 @@
+{% extends 'delhi_wiki/form.html' %}
+
+{% block title %}Create Event{% endblock %}
+
+{% block wiki_content %}
+{% with title="Create Event" submit_text="Create Event" cancel_url="delhi_wiki:event_list" %}
+{{ block.super }}
+{% endwith %}
+{% endblock %} 

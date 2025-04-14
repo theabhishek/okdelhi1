@@ -1,0 +1,42 @@
+{% extends 'job_portal/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto mt-8 px-4">
+  <div class="bg-white shadow rounded-lg overflow-hidden">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+      <h4 class="text-xl font-semibold text-gray-800">Notifications</h4>
+      {% if unread_count > 0 %}
+      <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-700">
+        {{ unread_count }} unread
+      </span>
+      {% endif %}
+    </div>
+
+    <div class="p-6">
+      {% if notifications %}
+      <ul class="space-y-4">
+        {% for notification in notifications %}
+        <li class="p-4 rounded-lg border 
+            {% if not notification.is_read %}bg-blue-50 border-blue-200{% else %}border-gray-200{% endif %}">
+          <div class="flex items-start justify-between">
+            <p class="text-gray-800 font-medium">{{ notification.message }}</p>
+            <small class="text-gray-500 whitespace-nowrap">{{ notification.created_at|timesince }} ago</small>
+          </div>
+          <div class="mt-2">
+            <a href="{% url 'job_portal:job_detail' pk=notification.job_application.job.pk slug=notification.job_application.job.slug %}" 
+               class="text-sm text-blue-600 hover:underline">
+              View Job
+            </a>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="text-center text-gray-500">No notifications yet.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+<br><br>
+{% endblock %}

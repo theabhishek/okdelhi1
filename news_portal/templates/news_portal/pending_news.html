@@ -1,0 +1,51 @@
+{% extends 'news_portal/base.html' %}
+
+{% block news_content %}
+<div class="card">
+    <div class="card-header">
+        <h4 class="mb-0">Pending News Articles</h4>
+    </div>
+    <div class="card-body">
+        {% if news %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Category</th>
+                            <th>Submitted</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for article in news %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'news_portal:approve_news' slug=article.slug %}" class="text-decoration-none">
+                                        {{ article.title }}
+                                    </a>
+                                </td>
+                                <td>{{ article.author.username }}</td>
+                                <td>{{ article.get_category_display }}</td>
+                                <td>{{ article.created_at|timesince }} ago</td>
+                                <td>
+                                    <a href="{% url 'news_portal:approve_news' slug=article.slug %}" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-check"></i> Review
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                <h4>No pending news articles</h4>
+                <p class="text-muted">All news articles have been reviewed.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

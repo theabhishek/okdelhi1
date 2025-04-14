@@ -1,0 +1,86 @@
+{% extends 'base/base.html' %}
+
+{% block title %}{{ profile_user.username }}'s Profile{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-8">
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="p-6">
+            <!-- Profile Header -->
+            <div class="flex items-center space-x-4">
+                {% if profile_user.avatar %}
+                    <img src="{{ profile_user.avatar.url }}" alt="{{ profile_user.username }}'s avatar" class="w-24 h-24 rounded-full">
+                {% else %}
+                    <div class="w-24 h-24 rounded-full bg-gray-300 flex items-center justify-center">
+                        <span class="text-gray-600 text-2xl">{{ profile_user.username|first|upper }}</span>
+                    </div>
+                {% endif %}
+                <div>
+                    <h1 class="text-2xl font-bold">{{ profile_user.username }}</h1>
+                    <p class="text-gray-600">Joined {{ profile_user.date_joined|date }}</p>
+                </div>
+            </div>
+
+            <!-- Bio Section -->
+            {% if profile_user.bio %}
+                <div class="mt-6">
+                    <h2 class="text-lg font-semibold">About</h2>
+                    <p class="text-gray-700">{{ profile_user.bio }}</p>
+                </div>
+            {% endif %}
+
+            <!-- User Actions -->
+            {% if user.is_authenticated and user == profile_user %}
+                <div class="mt-6 space-x-4">
+                 
+                    <form method="post" action="{% url 'users:logout' %}" class="inline-block">
+                        {% csrf_token %}
+                        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
+                            Logout
+                        </button>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- User's Activity -->
+    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Created Subreddits -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-bold mb-4">Created Subreddits</h2>
+            {% if profile_user.created_subreddits.all %}
+                <ul class="space-y-2">
+                    {% for subreddit in profile_user.created_subreddits.all %}
+                        <li>
+                            <a href="{% url 'subreddits:detail' slug=subreddit.slug %}" class="text-blue-600 hover:underline">
+                                r/{{ subreddit.name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-gray-600">No subreddits created yet.</p>
+            {% endif %}
+        </div>
+
+        <!-- Moderated Subreddits -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-bold mb-4">Moderated Subreddits</h2>
+            {% if profile_user.moderated_subreddits.all %}
+                <ul class="space-y-2">
+                    {% for subreddit in profile_user.moderated_subreddits.all %}
+                        <li>
+                            <a href="{% url 'subreddits:detail' slug=subreddit.slug %}" class="text-blue-600 hover:underline">
+                                r/{{ subreddit.name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-gray-600">No subreddits moderated.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

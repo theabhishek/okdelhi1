@@ -1,0 +1,139 @@
+{% extends 'delhi_wiki/base.html' %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-8">Search Results for "{{ query }}"</h1>
+
+    {% if has_results %}
+        <!-- Areas Section -->
+        {% if areas %}
+            <div class="mb-8">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4">Areas</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {% for area in areas %}
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                            {% if area.image %}
+                                <img src="{{ area.image.url }}" alt="{{ area.name }}" class="w-full h-48 object-cover">
+                            {% endif %}
+                            <div class="p-4">
+                                <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                                    <a href="{% url 'delhi_wiki:area_detail' area.slug %}" class="hover:text-indigo-600">
+                                        {{ area.name }}
+                                    </a>
+                                </h3>
+                                <p class="text-gray-600">{{ area.description|truncatewords:30 }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Landmarks Section -->
+        {% if landmarks %}
+            <div class="mb-8">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4">Landmarks</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {% for landmark in landmarks %}
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                            {% if landmark.image %}
+                                <img src="{{ landmark.image.url }}" alt="{{ landmark.name }}" class="w-full h-48 object-cover">
+                            {% endif %}
+                            <div class="p-4">
+                                <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                                    <a href="{% url 'delhi_wiki:landmark_detail' landmark.slug %}" class="hover:text-indigo-600">
+                                        {{ landmark.name }}
+                                    </a>
+                                </h3>
+                                <p class="text-gray-600">{{ landmark.description|truncatewords:30 }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Food Places Section -->
+        {% if food_places %}
+            <div class="mb-8">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4">Food Places</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {% for food_place in food_places %}
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                            {% if food_place.image %}
+                                <img src="{{ food_place.image.url }}" alt="{{ food_place.name }}" class="w-full h-48 object-cover">
+                            {% endif %}
+                            <div class="p-4">
+                                <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                                    <a href="{% url 'delhi_wiki:food_place_detail' food_place.slug %}" class="hover:text-indigo-600">
+                                        {{ food_place.name }}
+                                    </a>
+                                </h3>
+                                <p class="text-gray-600">{{ food_place.description|truncatewords:30 }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Markets Section -->
+        {% if markets %}
+            <div class="mb-8">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4">Markets</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {% for market in markets %}
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                            {% if market.image %}
+                                <img src="{{ market.image.url }}" alt="{{ market.name }}" class="w-full h-48 object-cover">
+                            {% endif %}
+                            <div class="p-4">
+                                <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                                    <a href="{% url 'delhi_wiki:market_detail' market.slug %}" class="hover:text-indigo-600">
+                                        {{ market.name }}
+                                    </a>
+                                </h3>
+                                <p class="text-gray-600">{{ market.description|truncatewords:30 }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Events Section -->
+        {% if events %}
+            <div class="mb-8">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4">Events</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {% for event in events %}
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                            {% if event.image %}
+                                <img src="{{ event.image.url }}" alt="{{ event.title }}" class="w-full h-48 object-cover">
+                            {% endif %}
+                            <div class="p-4">
+                                <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                                    <a href="{% url 'delhi_wiki:event_detail' event.slug %}" class="hover:text-indigo-600">
+                                        {{ event.title }}
+                                    </a>
+                                </h3>
+                                <p class="text-gray-600">{{ event.description|truncatewords:30 }}</p>
+                                <p class="text-sm text-gray-500 mt-2">
+                                    {{ event.start_date|date:"F j, Y" }} - {{ event.end_date|date:"F j, Y" }}
+                                </p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="text-center py-12">
+            <p class="text-xl text-gray-600">No results found for "{{ query }}"</p>
+            <p class="text-gray-500 mt-4">Try searching with different keywords or browse our categories.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %} 

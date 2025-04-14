@@ -1,0 +1,60 @@
+{% extends 'notifications/base_notifications.html' %}
+{% load crispy_forms_tags %}
+
+{% block notification_content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="mb-0">Review Notification</h2>
+    </div>
+    <div class="card-body">
+        <div class="notification-details mb-4">
+            <h3>{{ notification.title }}</h3>
+            <div class="d-flex align-items-center text-muted small mb-3">
+                <span>Submitted by {{ notification.author.username }}</span>
+                <span class="mx-2">•</span>
+                <span>{{ notification.created_at|date:"F j, Y" }}</span>
+                <span class="mx-2">•</span>
+                <span class="badge {% if notification.priority == 'high' %}bg-danger{% elif notification.priority == 'medium' %}bg-warning{% else %}bg-info{% endif %}">
+                    {{ notification.get_priority_display }} Priority
+                </span>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Content</h5>
+                    <p class="card-text">{{ notification.content }}</p>
+                </div>
+            </div>
+            {% if notification.start_date or notification.end_date %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Schedule</h5>
+                        <div class="row">
+                            {% if notification.start_date %}
+                                <div class="col-md-6">
+                                    <p class="mb-0"><strong>Start Date:</strong></p>
+                                    <p>{{ notification.start_date|date:"F j, Y" }}</p>
+                                </div>
+                            {% endif %}
+                            {% if notification.end_date %}
+                                <div class="col-md-6">
+                                    <p class="mb-0"><strong>End Date:</strong></p>
+                                    <p>{{ notification.end_date|date:"F j, Y" }}</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <div class="mt-3">
+                <button type="submit" name="status" value="approved" class="btn btn-success">Approve</button>
+                <button type="submit" name="status" value="rejected" class="btn btn-danger ms-2">Reject</button>
+                <a href="{% url 'notifications:pending_notifications' %}" class="btn btn-secondary ms-2">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %} 

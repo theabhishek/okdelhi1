@@ -1,0 +1,62 @@
+{% extends 'delhi_wiki/base.html' %}
+
+{% block title %}Delhi Metro Stations{% endblock %}
+
+{% block wiki_content %}
+<div class="bg-white rounded-lg shadow-md p-6">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">Delhi Metro Stations</h1>
+        <a href="{% url 'metro:metro_route_finder' %}" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+            Find Route
+        </a>
+    </div>
+
+    {% if stations %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for station in stations %}
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
+                    {% if station.image %}
+                        <img src="{{ station.image.url }}" alt="{{ station.name }}" class="w-full h-48 object-cover">
+                    {% else %}
+                        <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
+                            <span class="text-gray-500">No image available</span>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="p-4">
+                        <h2 class="text-xl font-semibold text-gray-900 mb-2">{{ station.name }}</h2>
+                        
+                        {% if station.lines.exists %}
+                            <div class="flex flex-wrap gap-2 mb-3">
+                                {% for line in station.lines.all %}
+                                    <span class="px-2 py-1 text-sm rounded-full" style="background-color: {{ line.color }}20; color: {{ line.color }}">
+                                        {{ line.name }}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        
+                        {% if station.is_interchange %}
+                            <div class="mb-3">
+                                <span class="bg-yellow-100 text-yellow-800 text-sm px-2 py-1 rounded-full">
+                                    Interchange Station
+                                </span>
+                            </div>
+                        {% endif %}
+                        
+                        {% if station.description %}
+                            <p class="text-gray-600 text-sm mb-4">{{ station.description|truncatewords:30 }}</p>
+                        {% endif %}
+                        
+                        <a href="{% url 'delhi_wiki:metro_station_detail' station.slug %}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                            View Details →
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-gray-600 text-center py-8">No metro stations found.</p>
+    {% endif %}
+</div>
+{% endblock %} 

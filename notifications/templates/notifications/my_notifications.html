@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto mt-4 px-4">
+    <div class="max-w-4xl mx-auto">
+        <div class="flex justify-between items-center mb-6 pb-2 border-b border-gray-200">
+            <h2 class="text-2xl font-semibold text-gray-800">My Notifications</h2>
+            <a href="{% url 'notifications:create_notification' %}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:border-blue-900 focus:ring focus:ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
+                <svg class="w-4 h-4 mr-2 -ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                Create New Notification
+            </a>
+        </div>
+
+        {% if notifications %}
+            <div class="space-y-3">
+                {% for notification in notifications %}
+                    <div class="border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 ease-in-out p-4 bg-white">
+                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2">
+                            <h5 class="text-lg font-semibold text-gray-900 mb-1 sm:mb-0">
+                                <a href="{% url 'notifications:notification_detail' notification.slug %}" class="text-blue-700 hover:text-blue-900 hover:underline">
+                                    {{ notification.title }}
+                                </a>
+                            </h5>
+                            <small class="text-sm text-gray-500 flex-shrink-0">
+                                {{ notification.created_at|date:"F j, Y" }}
+                            </small>
+                        </div>
+                        <p class="text-gray-600 mb-3 text-sm">{{ notification.content|truncatewords:30 }}</p>
+                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+                            <div class="flex items-center space-x-2 mb-2 sm:mb-0">
+                                <span class="inline-block rounded-full px-3 py-1 text-xs font-medium
+                                    {% if notification.status == 'pending' %} bg-yellow-100 text-yellow-800 ring-1 ring-inset ring-yellow-600/20
+                                    {% elif notification.status == 'approved' %} bg-green-100 text-green-800 ring-1 ring-inset ring-green-600/20
+                                    {% else %} bg-red-100 text-red-800 ring-1 ring-inset ring-red-600/10 {% endif %}">
+                                    {{ notification.get_status_display }}
+                                </span>
+                                <span class="inline-block rounded-full px-3 py-1 text-xs font-medium
+                                    {% if notification.priority == 'high' %} bg-red-100 text-red-800 ring-1 ring-inset ring-red-600/10
+                                    {% elif notification.priority == 'medium' %} bg-yellow-100 text-yellow-800 ring-1 ring-inset ring-yellow-600/20
+                                    {% else %} bg-blue-100 text-blue-800 ring-1 ring-inset ring-blue-700/10 {% endif %}">
+                                    {{ notification.get_priority_display }}
+                                </span>
+                            </div>
+                            {% if notification.status == 'pending' %}
+                                <div class="mt-2 sm:mt-0">
+                                    <a href="{% url 'notifications:notification_detail' notification.slug %}" class="inline-flex items-center px-3 py-1 border border-gray-300 rounded-md shadow-sm text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition ease-in-out duration-150">
+                                        View Details
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="bg-blue-50 border-l-4 border-blue-400 p-4" role="alert">
+                <p class="font-medium text-blue-800">No Notifications Found</p>
+                <p class="text-sm text-blue-700 mt-1">
+                    You haven't created any notifications yet.
+                    <a href="{% url 'notifications:create_notification' %}" class="font-semibold underline hover:text-blue-900">Create your first notification</a>.
+                </p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+<br><br>
+{% endblock %}

@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Hero Section with Parallax Effect -->
+<div class="relative overflow-hidden bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800 text-white">
+    <div class="absolute inset-0 bg-grid-white/[0.05] bg-[size:50px_50px]"></div>
+    <div class="relative container mx-auto px-4 py-24 md:py-32">
+        <div class="max-w-4xl mx-auto text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 animate-fade-in">
+                Welcome to Delhi Community Hub
+            </h1>
+            <p class="text-xl md:text-2xl mb-12 text-blue-100 animate-fade-in-up">
+                Your one-stop destination for coliving, transportation, and local deals
+            </p>
+            <div class="flex flex-wrap justify-center gap-4 animate-fade-in-up">
+                <a href="{% url 'pg_rental:listings' %}" 
+                   class="group bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center border border-white/20 hover:border-white/40">
+                    <i class="fas fa-building mr-3 group-hover:scale-110 transition-transform"></i>
+                    Find Coliving & PG
+                </a>
+                <a href="{% url 'metro:metro_route_finder' %}" 
+                   class="group bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center border border-white/20 hover:border-white/40">
+                    <i class="fas fa-train mr-3 group-hover:scale-110 transition-transform"></i>
+                    Metro Routes
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Featured Carousel Section -->
+<div class="bg-gray-50 py-12">
+    <div class="container mx-auto px-4">
+        <div id="featuredCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#featuredCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#featuredCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#featuredCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner rounded-2xl overflow-hidden shadow-xl">
+                <!-- Slide 1: Featured PG -->
+                <div class="carousel-item active">
+                    <div class="relative h-[400px]">
+                        <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                             class="absolute w-full h-full object-cover" alt="Featured PG">
+                        <div class="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent"></div>
+                        <div class="absolute inset-0 flex items-center p-12">
+                            <div class="max-w-xl">
+                                <h2 class="text-4xl font-bold text-white mb-4">Find Your Perfect PG</h2>
+                                <p class="text-xl text-white/90 mb-6">Discover comfortable and affordable living spaces across Delhi</p>
+                                <a href="{% url 'pg_rental:listings' %}" class="inline-flex items-center px-6 py-3 bg-white text-blue-600 rounded-lg font-semibold hover:bg-blue-50 transition">
+                                    Explore PGs
+                                    <i class="fas fa-arrow-right ml-2"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Slide 2: Metro Routes -->
+                <div class="carousel-item">
+                    <div class="relative h-[400px]">
+                        <img src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                             class="absolute w-full h-full object-cover" alt="Delhi Metro">
+                        <div class="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent"></div>
+                        <div class="absolute inset-0 flex items-center p-12">
+                            <div class="max-w-xl">
+                                <h2 class="text-4xl font-bold text-white mb-4">Navigate Delhi Metro</h2>
+                                <p class="text-xl text-white/90 mb-6">Plan your journey with our comprehensive metro route guide</p>
+                                <a href="{% url 'metro:metro_route_finder' %}" class="inline-flex items-center px-6 py-3 bg-white text-blue-600 rounded-lg font-semibold hover:bg-blue-50 transition">
+                                    View Routes
+                                    <i class="fas fa-arrow-right ml-2"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Slide 3: Coupons -->
+                <div class="carousel-item">
+                    <div class="relative h-[400px]">
+                        <img src="https://images.unsplash.com/photo-1607082348824-0a0f2d6d8c6a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                             class="absolute w-full h-full object-cover" alt="Coupons">
+                        <div class="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent"></div>
+                        <div class="absolute inset-0 flex items-center p-12">
+                            <div class="max-w-xl">
+                                <h2 class="text-4xl font-bold text-white mb-4">Exclusive Deals</h2>
+                                <p class="text-xl text-white/90 mb-6">Save money with our curated collection of coupons and offers</p>
+                                <a href="{% url 'coupon_service:coupon_list' %}" class="inline-flex items-center px-6 py-3 bg-white text-blue-600 rounded-lg font-semibold hover:bg-blue-50 transition">
+                                    View Deals
+                                    <i class="fas fa-arrow-right ml-2"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#featuredCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#featuredCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Access Section with Glassmorphism -->
+<div class="container mx-auto px-4 py-16">
+    <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Quick Access</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Coliving & PG Card -->
+        <a href="{% url 'pg_rental:listings' %}" 
+           class="group bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-8 border border-gray-100 hover:border-blue-200">
+            <div class="flex items-center mb-6">
+                <div class="bg-blue-100 p-4 rounded-2xl mr-4 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-building text-blue-600 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800">Coliving & PG</h3>
+            </div>
+            <p class="text-gray-600 mb-4">Find your perfect shared living space in Delhi</p>
+            <div class="flex items-center text-blue-600 group-hover:text-blue-700">
+                <span class="text-sm font-medium">Explore Now</span>
+                <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+            </div>
+        </a>
+
+        <!-- Metro Routes Card -->
+        <a href="{% url 'metro:metro_route_finder' %}" 
+           class="group bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-8 border border-gray-100 hover:border-green-200">
+            <div class="flex items-center mb-6">
+                <div class="bg-green-100 p-4 rounded-2xl mr-4 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-train text-green-600 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800">Metro Routes</h3>
+            </div>
+            <p class="text-gray-600 mb-4">Plan your journey with Delhi Metro</p>
+            <div class="flex items-center text-green-600 group-hover:text-green-700">
+                <span class="text-sm font-medium">View Routes</span>
+                <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+            </div>
+        </a>
+
+        <!-- Coupons Card -->
+        <a href="{% url 'coupon_service:coupon_list' %}" 
+           class="group bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-8 border border-gray-100 hover:border-yellow-200">
+            <div class="flex items-center mb-6">
+                <div class="bg-yellow-100 p-4 rounded-2xl mr-4 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-tags text-yellow-600 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800">Coupons & Deals</h3>
+            </div>
+            <p class="text-gray-600 mb-4">Save money with exclusive offers</p>
+            <div class="flex items-center text-yellow-600 group-hover:text-yellow-700">
+                <span class="text-sm font-medium">View Deals</span>
+                <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+            </div>
+        </a>
+
+        <!-- Bus Service Card -->
+        <a href="{% url 'bus_service:route_search' %}" 
+           class="group bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-8 border border-gray-100 hover:border-purple-200">
+            <div class="flex items-center mb-6">
+                <div class="bg-purple-100 p-4 rounded-2xl mr-4 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-bus text-purple-600 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800">Bus Service</h3>
+            </div>
+            <p class="text-gray-600 mb-4">Find bus routes and schedules</p>
+            <div class="flex items-center text-purple-600 group-hover:text-purple-700">
+                <span class="text-sm font-medium">Search Routes</span>
+                <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+            </div>
+        </a>
+    </div>
+</div>
+
+<!-- Main Content Section -->
+<div class="container mx-auto px-4 py-16">
+    <div class="flex flex-col lg:flex-row gap-12">
+        <!-- Latest Posts Section -->
+        <div class="lg:w-2/3">
+            <h2 class="text-3xl font-bold mb-8 text-gray-800">Latest Posts</h2>
+            <div class="space-y-8">
+                {% for post in posts %}
+                <div class="group bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-gray-200">
+                    <div class="p-8">
+                        <div class="flex items-center mb-6">
+                            <div class="bg-gray-100 p-3 rounded-full mr-4 group-hover:scale-110 transition-transform">
+                                <i class="fas fa-user text-gray-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">{{ post.title }}</h3>
+                                <p class="text-sm text-gray-500">Posted in {{ post.subreddit.name }} by {{ post.author.username }}</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-6">{{ post.content|truncatewords:50 }}</p>
+                        <a href="{% url 'detail' post.subreddit.slug post.slug %}" class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium group">
+                            Read more
+                            <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-8 text-center border border-gray-100">
+                    <p class="text-gray-600">No posts yet.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Popular Subreddits Section -->
+        <div class="lg:w-1/3">
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-8 sticky top-6 border border-gray-100">
+                <h3 class="text-2xl font-bold mb-6 text-gray-800">Popular Subreddits</h3>
+                <div class="space-y-4">
+                    {% for subreddit in subreddits %}
+                    <a href="{% url 'subreddits:subreddit_detail' subreddit.slug %}" 
+                       class="block p-6 rounded-xl hover:bg-gray-50 transition-all duration-300 border border-gray-100 hover:border-gray-200">
+                        <h4 class="font-semibold text-gray-800 mb-2">{{ subreddit.name }}</h4>
+                        <p class="text-sm text-gray-600">{{ subreddit.description|truncatewords:10 }}</p>
+                    </a>
+                    {% empty %}
+                    <p class="text-gray-600">No subreddits yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add custom animations -->
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+        animation: fadeIn 1s ease-out;
+    }
+    .animate-fade-in-up {
+        animation: fadeInUp 1s ease-out;
+    }
+</style>
+{% endblock %} 

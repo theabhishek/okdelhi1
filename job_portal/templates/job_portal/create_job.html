@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Post a New Job{% endblock %}
+
+{% block content %}
+<style>
+    .custom-input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+      }
+      
+      .custom-input:focus {
+        border-color: #2563eb; /* blue-600 like Tailwind */
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+        outline: none;
+      }
+    </style>  
+<div class="max-w-5xl mx-auto p-4 sm:p-6">
+    <div class="bg-white shadow rounded-xl">
+        <div class="border-b px-6 py-4">
+            <h2 class="text-xl font-semibold text-gray-800">Post a New Job</h2>
+        </div>
+        <div class="p-6">
+            <form method="post" enctype="multipart/form-data" class="space-y-8">
+                {% csrf_token %}
+
+                <!-- Basic Information -->
+                <div>
+                    <h5 class="text-lg font-medium text-blue-600 mb-4">Basic Information</h5>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {{ form.title|as_crispy_field }}
+                        {{ form.company|as_crispy_field }}
+                        {{ form.location|as_crispy_field }}
+                        {{ form.category|as_crispy_field }}
+                        {{ form.job_type|as_crispy_field }}
+                        {{ form.application_deadline|as_crispy_field }}
+                    </div>
+                </div>
+
+                <!-- Salary Information -->
+                <div>
+                    <h5 class="text-lg font-medium text-blue-600 mb-4">Salary Information</h5>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {{ form.salary_min|as_crispy_field }}
+                        {{ form.salary_max|as_crispy_field }}
+                    </div>
+                </div>
+
+                <!-- Experience & Education -->
+                <div>
+                    <h5 class="text-lg font-medium text-blue-600 mb-4">Experience & Education</h5>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {{ form.experience_min|as_crispy_field }}
+                        {{ form.experience_max|as_crispy_field }}
+                    </div>
+                    <div class="mt-4">
+                        {{ form.education|as_crispy_field }}
+                    </div>
+                </div>
+
+                <!-- Job Details -->
+                <div>
+                    <h5 class="text-lg font-medium text-blue-600 mb-4">Job Details</h5>
+                    <div class="space-y-4">
+                        {{ form.description|as_crispy_field }}
+                        {{ form.requirements|as_crispy_field }}
+                        {{ form.skills|as_crispy_field }}
+                        {{ form.benefits|as_crispy_field }}
+                    </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div>
+                    <h5 class="text-lg font-medium text-blue-600 mb-4">Contact Information</h5>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {{ form.contact_email|as_crispy_field }}
+                        {{ form.contact_phone|as_crispy_field }}
+                    </div>
+                    <div class="mt-4">
+                        {{ form.website|as_crispy_field }}
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t mt-6">
+                    <a href="{% url 'job_portal:job_list' %}" class="inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-100">
+                        <i class="fas fa-times mr-2"></i>Cancel
+                    </a>
+                    <button type="submit" class="inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                        <i class="fas fa-paper-plane mr-2"></i>Post Job
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %} 
