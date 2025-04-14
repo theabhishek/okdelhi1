@@ -7,8 +7,7 @@
             "config": {
                 "maxLambdaSize": "15mb",
                 "runtime": "python3.9",
-                "installCommand": "pip install --no-cache-dir -r requirements.txt",
-                "buildCommand": "python manage.py collectstatic --noinput"
+                "installCommand": "chmod +x build.sh && ./build.sh"
             }
         }
     ],

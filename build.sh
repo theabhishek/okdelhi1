@@ -1,10 +1,25 @@
 #!/bin/bash
 
-# Install Python dependencies
-pip install --no-cache-dir -r requirements.txt
+# Exit on error
+set -e
+
+# Install system dependencies
+echo "Installing system dependencies..."
+apt-get update
+apt-get install -y libpq-dev python3-dev
+
+# Create and activate virtual environment
+echo "Setting up Python environment..."
+python -m venv venv
+source venv/bin/activate
+
+# Upgrade pip and install dependencies
+echo "Installing Python dependencies..."
+pip install --upgrade pip
+pip install -r requirements.txt
 
 # Collect static files
+echo "Collecting static files..."
 python manage.py collectstatic --noinput
 
-# Run migrations
-python manage.py migrate 
+echo "Build completed successfully!" 
