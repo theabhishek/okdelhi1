@@ -1,41 +1,13 @@
 {
-    "version": 2,
-    "builds": [
-        {
-            "src": "redditClone/wsgi.py",
-            "use": "@vercel/python",
-            "config": {
-                "maxLambdaSize": "15mb",
-                "runtime": "python3.9"
-            }
-        }
-    ],
+    "builds": [{
+        "src": "redditClone/wsgi.py",
+        "use": "@vercel/python",
+        "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
+    }],
     "routes": [
-        {
-            "src": "/static/(.*)",
-            "dest": "/static/$1"
-        },
         {
             "src": "/(.*)",
             "dest": "redditClone/wsgi.py"
         }
-    ],
-    "env": {
-        "PYTHONPATH": "/vercel/path0",
-        "DEBUG": "False",
-        "SECRET_KEY": "django-insecure-9w3x2y1z0v8u7t6s5r4q3p2o1n0m9l8k7j6i5h4g3f2e1d0c9b8a7",
-        "ALLOWED_HOSTS": ".vercel.app,okdelhi.in",
-        "CSRF_TRUSTED_ORIGINS": "https://okdelhi.in,https://*.vercel.app",
-        "DATABASE_URL": "postgresql://okdelhi_owner:npg_9QzHlTwSEU5O@ep-green-violet-a85hel32-pooler.eastus2.azure.neon.tech/okdelhi?sslmode=require",
-        "AWS_ACCESS_KEY_ID": "AKIAUQOFPOESDI3E3S2O",
-        "AWS_SECRET_ACCESS_KEY": "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",
-        "AWS_STORAGE_BUCKET_NAME": "okdelhi",
-        "AWS_S3_REGION_NAME": "us-east-1",
-        "DELHI_METRO_API_KEY": "TGfInm24tkWHJxifYHU8v4lxU5O4aT0N",
-        "DELHI_BUS_API_KEY": "TGfInm24tkWHJxifYHU8v4lxU5O4aT0N",
-        "GTFS_REALTIME_API_KEY": "9TSATtmfGnkbQIa9p2nu99ZSNbTfpK09JBsWqSIj",
-        "CLOUDINARY_CLOUD_NAME": "dnjm7mo6c",
-        "CLOUDINARY_API_KEY":"314742724725214",
-        "CLOUDINARY_API_SECRET":"ubePI9wZ-LEk4hVW8zbwvaw7ehc"
-    }
+    ]
 }
