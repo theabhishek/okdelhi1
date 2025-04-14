@@ -1,1 +1,1 @@
-web: gunicorn 'reddit_clone.wsgi' --log-file - 
+web: gunicorn 'redditClone.wsgi' --log-file - 
