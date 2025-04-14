@@ -16,7 +16,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Debug settings
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
-SECRET_KEY = 'django-insecure-9w3x2y1z0v8u7t6s5r4q3p2o1n0m9l8k7j6i5h4g3f2e1d0c9b8a7'  # Development key
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-9w3x2y1z0v8u7t6s5r4q3p2o1n0m9l8k7j6i5h4g3f2e1d0c9b8a7')  # Development key
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 # Database settings
