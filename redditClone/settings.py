@@ -18,7 +18,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-9w3x2y1z0v8u7t6s5r4q3p2o1n0m9l8k7j6i5h4g3f2e1d0c9b8a7')  # Development key
 ALLOWED_HOSTS = ['.vercel.app','*','', '','okdelhi1-2-git-main-errorlads-projects.vercel.app']
-
+CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:8000/']
 # Database settings
 tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
 
