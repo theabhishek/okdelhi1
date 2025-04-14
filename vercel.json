@@ -26,7 +26,7 @@
         "PYTHONPATH": "/vercel/path0:/vercel/path0/redditClone",
         "DEBUG": "False",
         "SECRET_KEY": "django-insecure-9w3x2y1z0v8u7t6s5r4q3p2o1n0m9l8k7j6i5h4g3f2e1d0c9b8a7",
-        "ALLOWED_HOSTS": ".vercel.app,okdelhi.in,okdelhi1-2-git-main-errorlads-projects.vercel.app",
+        "ALLOWED_HOSTS": ".vercel.app,okdelhi.in,kdelhi1-2-git-main-errorlads-projects.vercel.app",
         "CSRF_TRUSTED_ORIGINS": "https://okdelhi.in,https://*.vercel.app",
         "DATABASE_URL": "postgresql://okdelhi_owner:npg_9QzHlTwSEU5O@ep-green-violet-a85hel32-pooler.eastus2.azure.neon.tech/okdelhi?sslmode=require",
         "AWS_ACCESS_KEY_ID": "AKIAUQOFPOESDI3E3S2O",
