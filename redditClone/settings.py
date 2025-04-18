@@ -1,45 +1,79 @@
 import os
 from pathlib import Path
-from dotenv import load_dotenv
 from urllib.parse import urlparse
 import dj_database_url
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
 
-
-# Load environment variables
-load_dotenv(override=True)
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Debug settings
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
-SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-9w3x2y1z0v8u7t6s5r4q3p2o1n0m9l8k7j6i5h4g3f2e1d0c9b8a7')  # Development key
-ALLOWED_HOSTS = ['.vercel.app','*','', '','web-production-a3edb.up.railway.app']
-CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:8000/','web-production-a3edb.up.railway.app','web-production-a3edb.up.railway.app']
-# Database settings
-tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
+DEBUG = True
 
+# SECRET_KEY configuration
+SECRET_KEY = 'django-insecure-9w3x2y1z0v8u7t6s5r4q3p2o1n0m9l8k7j6i5h4g3f2e1d0c9b8a7'
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.vercel.app']
+
+# Database settings
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': tmpPostgres.path.replace('/', ''),
-        'USER': tmpPostgres.username,
-        'PASSWORD': tmpPostgres.password,
-        'HOST': tmpPostgres.hostname,
-        'PORT': 5432,
+        'NAME': 'okdelhi',
+        'USER': 'okdelhi_owner',
+        'PASSWORD': 'npg_9QzHlTwSEU5O',
+        'HOST': 'ep-green-violet-a85hel32-pooler.eastus2.azure.neon.tech',
+        'PORT': '5432',
+        'OPTIONS': {
+            'sslmode': 'require',
+        },
     }
 }
 
 # Cloudinary settings
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dnjm7mo6c',
+    'API_KEY': '314742724725214',
+    'API_SECRET': 'ubePI9wZ-LEk4hVW8zbwvaw7ehc',
+    'SECURE': True,
+    'MEDIA_TAG': 'media',
+    'INVALID_VIDEO_ERROR_MESSAGE': 'Please upload a valid video file',
+    'EXCLUDE_DELETE_ORPHANED_MEDIA_PATHS': (),
+    'STATIC_TAG': 'static',
+    'STATICFILES_MANIFEST_ROOT': os.path.join(BASE_DIR, 'manifest'),
+    'STATIC_IMAGES_EXTENSIONS': ['jpg', 'jpe', 'jpeg', 'jpc', 'jp2', 'j2k', 'wdp', 'jxr', 'hdp', 'png', 'gif', 'webp', 'bmp', 'tif', 'tiff', 'ico'],
+    'MAGIC_FILE_PATH': 'magic',
+    'PREFIX': MEDIA_URL
+}
+
+# Configure Cloudinary
 cloudinary.config(
-    cloud_name=os.getenv('CLOUDINARY_CLOUD_NAME', 'dnjm7mo6c'),
-    api_key=os.getenv('CLOUDINARY_API_KEY', '314742724725214'),
-    api_secret=os.getenv('CLOUDINARY_API_SECRET', 'ubePI9wZ-LEk4hVW8zbwvaw7ehc'),
+    cloud_name=CLOUDINARY_STORAGE['CLOUD_NAME'],
+    api_key=CLOUDINARY_STORAGE['API_KEY'],
+    api_secret=CLOUDINARY_STORAGE['API_SECRET'],
     secure=True
 )
+
+# Media files configuration
+MEDIA_URL = '/media/'  # This will be handled by Cloudinary storage
+MEDIA_ROOT = ''  # Empty string since we're using Cloudinary
+
+# Static files configuration
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Storage configuration
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+
+# Whitenoise configuration
+WHITENOISE_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+WHITENOISE_USE_FINDERS = True
+WHITENOISE_MANIFEST_STRICT = False
+WHITENOISE_ALLOW_ALL_ORIGINS = True
 
 # Application definition
 INSTALLED_APPS = [
@@ -81,7 +115,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'redditClone.urls'
@@ -126,26 +159,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Media files configuration
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-# Static files configuration
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-# Whitenoise configuration for static files
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
-# Cloudinary storage settings
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME', 'dnjm7mo6c'),
-    'API_KEY': os.getenv('CLOUDINARY_API_KEY', '314742724725214'),
-    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET', 'ubePI9wZ-LEk4hVW8zbwvaw7ehc'),
-}
-
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -163,16 +176,16 @@ LOGOUT_REDIRECT_URL = '/'
 
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
-EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
-EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True') == 'True'
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'your-email@gmail.com'
+EMAIL_HOST_PASSWORD = 'your-app-password'
 
 # Security settings
-CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'http://localhost:8000,https://*.vercel.app').split(',')
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'https://*.vercel.app']
 
 # API Keys
-DELHI_METRO_API_KEY = os.getenv('DELHI_METRO_API_KEY', 'TGfInm24tkWHJxifYHU8v4lxU5O4aT0N')
-DELHI_BUS_API_KEY = os.getenv('DELHI_BUS_API_KEY', 'TGfInm24tkWHJxifYHU8v4lxU5O4aT0N')
-GTFS_REALTIME_API_KEY = os.getenv('GTFS_REALTIME_API_KEY', '9TSATtmfGnkbQIa9p2nu99ZSNbTfpK09JBsWqSIj') 
+DELHI_METRO_API_KEY = 'TGfInm24tkWHJxifYHU8v4lxU5O4aT0N'
+DELHI_BUS_API_KEY = 'TGfInm24tkWHJxifYHU8v4lxU5O4aT0N'
+GTFS_REALTIME_API_KEY = '9TSATtmfGnkbQIa9p2nu99ZSNbTfpK09JBsWqSIj' 
