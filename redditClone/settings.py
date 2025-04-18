@@ -55,15 +55,14 @@ cloudinary.config(
     api_secret=CLOUDINARY_STORAGE['API_SECRET'],
     secure=True
 )
-
-# Media files configuration
-MEDIA_URL = '/media/'  # This will be handled by Cloudinary storage
-MEDIA_ROOT = ''  # Empty string since we're using Cloudinary
-
-# Static files configuration
-STATIC_URL = '/static/'
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Media files (Uploaded files)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Storage configuration
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
